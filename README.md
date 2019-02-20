@@ -37,5 +37,6 @@ All functions are controlled by the KY-040 encoder:
 
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/images/schematic_leonardo.png" width=500>
+<img src="https://github.com/micworg/stir/blob/master/images/schematic_promicro.png" width=500>
 <img src="https://github.com/micworg/stir/blob/master/images/schematic_uno.png" width=500>
 </p>
