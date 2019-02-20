@@ -22,7 +22,7 @@ All functions are controlled by the KY-040 encoder:
   * **BOOST**: turn sets boost speed, long press activates/deactivates the boost function (running time is shown in the display).
   * **BTIME**: turn sets the boost time in minutes.
   * **CATCH**: turn activates/deactivates the fishing function
-  * **CTIME**: turn sets the interwall in minutes for the fish catching function
+  * **CTIME**: turn sets the interval in minutes for the fish catching function
 
 ## Display Indicators:
 
@@ -31,9 +31,21 @@ All functions are controlled by the KY-040 encoder:
 * **Top Center/Right**: Displays the current stirrer speed (or 'OFF' or 'CAT' (Fishing)).
 * **Top left**: shows the remaining time of the boost function.
 
+## Settings (in stir.ino)
+
+|Value|Description|
+|:----|:----------|
+|SPEEDINC|increment of speed values when turning the encoder|
+|FANMIN|fan minimum speed|
+|FANMAX|maximum speed of the fan|
+|RINTERVAL|regulation interval (ms)|
+|RDELAY|extra regulation delay when value changes|
+|CATCHSTOP|stop interval for stir fish catch function|
+|PWM0, PWN1|PWM output pins|
+|I0, I1|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
+|CLK, DT, SW|pins for KY-040 encoder| 
 
 ## Schematics
-
 
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/images/schematic_leonardo.png" width=500>
