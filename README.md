@@ -40,6 +40,7 @@ All functions are controlled by the KY-040 encoder:
 |FANMAX|maximum speed of the fan (it is important that this is the real maximum value of the fan)|
 |RINTERVAL|regulation interval (ms)|
 |RDELAY|extra regulation delay when value changes (ms)|
+|RTOL|regulation tolerance|
 |CATCHSTOP|stop interval for stir fish catch function (ms)|
 |PWM0, PWN1|PWM output pins|
 |I0, I1|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
