@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019, v1.2.5)
+/////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019, v1.2.6)
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -16,8 +16,8 @@ int CATCHSTOP     = 20000;                                                      
 int PWM0          = 9;                                                                    // PWM pin for 1. fan
 int PWM1          = 10;                                                                   // PWM pin for 2. fan
                                       
-int I0            = 2;                                                       // interrupt for 1. fan rpm signal
-int I1            = 3;                                                       // interrupt for 2. fan rpm signal
+int I0            = 2;            // interrupt for fan 0 rpm signal (use 2 for Leonardo/ProMicro and 0 for Uno)
+int I1            = 3;            // interrupt for fan 1 rpm signal (use 3 for Leonardo/ProMicro and 1 for Uno)
                                   
 int CLK           = 5;                                                                 // clk on KY-040 encoder
 int DT            = 6;                                                                  // dt on KY-040 encoder
@@ -31,14 +31,14 @@ int SAVETAG       = 1004;                                                       
 
 LiquidCrystal_I2C lcd(0x27,16,2);                                           // LCD display (connect to SDA/SCL)
 
-int v0,b0,r0,v1,b1,r1,r,fanstate0,fanstate1;                                            // speed and regulation
+int v0,b0,r0,v1,b1,r1,fanstate0,fanstate1;                                              // speed and regulation
 long rpmcount0,rpmcount1;                                                                        // rpm counter
 double rpm0,rpm1;                                                                                        // rpm
 
 long sts,rts,swts,bts,ox,savets,catchts0,catchts1,stop0,stop1,b0ts,b1ts;                              // timing
 int bdelay,bprocess,enclast,encval,swmode,mode;                                    // button/encoder processing
 int OK,SAVE,LOCK,bstate0,bstate1,btime0,btime1,catch0,catch1,ctime0,ctime1;                  // operation state
-char form[8],out[64];String str;                                                               // string buffer
+char form[8],out[16];String str;                                                               // string buffer
  
  
 void setup() { ////////////////////////////////////////////////////////////////////////////////////////// SETUP
@@ -48,16 +48,14 @@ void setup() { /////////////////////////////////////////////////////////////////
   
   lcd.init();lcd.backlight();lcd.clear();                                                     // initialize lcd
 
+  pinMode(PWM0,OUTPUT);pinMode(PWM1,OUTPUT);                                                    // set PWM pins
+  pinMode(CLK,INPUT);pinMode(DT,INPUT);pinMode(SW,INPUT);                                    // set KY-040 pins
+
   attachInterrupt(I0,rpmint0,FALLING);                                           // setup interrupts vor rpm in
   attachInterrupt(I1,rpmint1,FALLING);
 
   TCCR1A=0;TCCR1B=0;TCNT1=0;                                                      // setup timer for 25 kHz PWM
-  TCCR1A = _BV(COM1A1)  // non-inverted PWM on ch. A
-         | _BV(COM1B1)  // same on ch; B
-         | _BV(WGM11);  // mode 10: ph. correct PWM, TOP=ICR1
-  TCCR1B = _BV(WGM13)   // ditto
-         | _BV(CS10);   // prescaler=1
-  ICR1   = 320;         // TOP=320
+  TCCR1A=_BV(COM1A1)|_BV(COM1B1)|_BV(WGM11);TCCR1B=_BV(WGM13)|_BV(CS10);ICR1=320;
 
   SAVE=0;                                                                           // load/initialize settings
   if (eer(0)!=SAVETAG) {
@@ -67,9 +65,6 @@ void setup() { /////////////////////////////////////////////////////////////////
     v0=eer(1);v1=eer(2);b0=eer(3);b1=eer(4);btime0=eer(5);btime1=eer(6);
     catch0=eer(7);catch1=eer(8);ctime0=eer(9);ctime1=eer(10);
   }
-
-  pinMode(PWM0,OUTPUT);pinMode(PWM1,OUTPUT);                                                    // set PWM pins
-  pinMode(CLK,INPUT);pinMode(DT,INPUT);pinMode(SW,INPUT);                                    // set KY-040 pins
 
   enclast=digitalRead(CLK);                                                                // get encoder state
   fanstate0=0;fanstate1=0;OCR1A=0;OCR1B=0;                                                     // turn fans off
@@ -100,15 +95,13 @@ void loop() { //////////////////////////////////////////////////////////////////
     if (str=="info") {;serinfo();OK=1;}                                                                 // info
     
     if (str.substring(0,5)=="speed") {                                                   // speed <fan0> <fan1>
-      v0=sstr(str,':',1).toInt();
-      v1=sstr(str,':',2).toInt();
+      v0=sstr(str,':',1).toInt();v1=sstr(str,':',2).toInt();
       updatePWM();r0=0;r1=0;rts=MS+RDELAY;
       SAVE++;OK=1;updatelcd();serinfo();
     }
 
     if (str.substring(0,6)=="bspeed") {                                                 // bspeed <fan0> <fan1>
-      b0=sstr(str,':',1).toInt();
-      b1=sstr(str,':',2).toInt();
+      b0=sstr(str,':',1).toInt();b1=sstr(str,':',2).toInt();
       updatePWM();r0=0;r1=0;rts=MS+RDELAY;
       SAVE++;OK=1;updatelcd();updatespeed();serinfo();
     }
@@ -133,14 +126,12 @@ void loop() { //////////////////////////////////////////////////////////////////
     }
     
     if (str.substring(0,5)=="btime") {                                     // btime <fan0> <fan1> (value: 0-60)
-      btime0=sstr(str,':',1).toInt();btime0=cut(btime0,0,60);
-      btime1=sstr(str,':',2).toInt();btime1=cut(btime1,0,60);
+      btime0=cut(sstr(str,':',1).toInt(),0,60);btime1=cut(sstr(str,':',2).toInt(),0,60);
       SAVE++;OK=1;updatelcd();updatespeed();serinfo();
     }
     
     if (str.substring(0,5)=="ctime") {                                   // ctime <fan0> <fan1> (value: 60-240)
-      ctime0=sstr(str,':',1).toInt();ctime0=cut(ctime0,60,240);
-      ctime1=sstr(str,':',2).toInt();ctime1=cut(ctime1,60,240);;
+      ctime0=cut(sstr(str,':',1).toInt(),60,240);ctime1=cut(sstr(str,':',2).toInt(),60,240);
       SAVE++;OK=1;updatelcd();updatespeed();serinfo();
     }
 
@@ -155,17 +146,11 @@ void loop() { //////////////////////////////////////////////////////////////////
     sts=MS;rpmcount0=0;rpmcount1=0;
 
     if (!fanstate0) r0=0;
-    else {
-      if (bstate0) r=b0; else r=v0;
-      if (abs(r-rpm0)>RTOL) r0+=(r-rpm0)/10.0+1.0;
-    }
+    else if (abs((bstate0?b0:v0)-rpm0)>RTOL) r0+=((bstate0?b0:v0)-rpm0)/10.0+1.0;
     
     if (!fanstate1) r1=0;
-    else {
-      if (bstate1) r=b1; else r=v1;
-      if (abs(r-rpm1)>RTOL) r1+=(r-rpm1)/10.0+1.0;
-    }
-        
+    else if (abs((bstate1?b1:v1)-rpm1)>RTOL) r1+=((bstate1?b1:v1)-rpm1)/10.0+1.0;
+
     updatePWM();updatespeed();rts=MS;
   }
 
@@ -193,13 +178,13 @@ void loop() { //////////////////////////////////////////////////////////////////
         updatespeed();
       }
 
-      if (swmode==0 && mode==1 && !LOCK) {                                                    // boost 0 on/off
+      if (swmode==0 && mode==1 && !LOCK) {                                                // boost fan 0 on/off
         if (bstate0==0) {
           rts=MS+RDELAY;bstate0=1;b0ts=MS;fanstate0=1;r0=0;updatePWM();
         } else {;bstate0=0;}
         updatespeed();
       }
-      if (swmode==1 && mode==1 && !LOCK) {                                                    // boost 1 on/off
+      if (swmode==1 && mode==1 && !LOCK) {                                                // boost fan 1 on/off
         if (bstate1==0) {
           rts=MS+RDELAY;bstate1=1;b1ts=MS;fanstate1=1;r1=0;updatePWM();
         } else {;bstate1=0;}
@@ -228,7 +213,7 @@ void loop() { //////////////////////////////////////////////////////////////////
   if (encval != enclast && !LOCK) {
     if(!encval){
             
-      if (digitalRead(DT) != encval) {                                                                    // cw
+      if (digitalRead(DT) != encval) {                                                // turn encoder clockwise
         if (swmode==0 && mode==0) v0+=SPEEDINC;  // fan 0 speed up
         if (swmode==1 && mode==0) v1+=SPEEDINC;  // fan 1 speed up
         if (swmode==0 && mode==1) b0+=SPEEDINC;  // boost 0 speed up
@@ -239,8 +224,8 @@ void loop() { //////////////////////////////////////////////////////////////////
         if (swmode==1 && mode==3) catch1++;      // catch 1 on/off
         if (swmode==0 && mode==4) ctime0+=10;    // catch time 0 up
         if (swmode==1 && mode==4) ctime1+=10;    // catch time 1 up
-        if (swmode==2) mode++;
-      } else {                                                                                           // ccw
+        if (swmode==2) mode++;                   // scroll menu
+      } else {                                                                 // turn encoder counterclockwise
         if (swmode==0 && mode==0) v0-=SPEEDINC;  // fan 0 speed down
         if (swmode==1 && mode==0) v1-=SPEEDINC;  // fan 1 speed down
         if (swmode==0 && mode==1) b0-=SPEEDINC;  // boost 0 speed down
@@ -251,22 +236,22 @@ void loop() { //////////////////////////////////////////////////////////////////
         if (swmode==1 && mode==3) catch1--;      // catch 1 on/off
         if (swmode==0 && mode==4) ctime0-=10;    // catch time 0 down
         if (swmode==1 && mode==4) ctime1-=10;    // catch time 1 down
-        if (swmode==2) mode--;
+        if (swmode==2) mode--;                   // scroll menu
       }
     
-      if (swmode==0 && mode==0) {;updatePWM();r0=0;rts=MS+RDELAY;}                      // apply speed change 0
-      if (swmode==1 && mode==0) {;updatePWM();r1=0;rts=MS+RDELAY;}                      // apply speed change 1
-      if (swmode==0 && mode==1) {;updatePWM();r0=0;rts=MS+RDELAY;}                // apply boost speed change 0
-      if (swmode==1 && mode==1) {;updatePWM();r1=0;rts=MS+RDELAY;}                // apply boost speed change 1
-      
-      if (swmode==0 && mode==2) btime0=cut(btime0,0,60);                                  // check boost time 0
-      if (swmode==1 && mode==2) btime1=cut(btime1,0,60);                                  // check boost time 1
-      
-      if (swmode==0 && mode==3) {;catch0=cut(catch0,0,1);catchts0=MS;}                         // check catch 0
-      if (swmode==1 && mode==3) {;catch1=cut(catch1,0,1);catchts1=MS;}                         // check catch 1
-      
-      if (swmode==0 && mode==4) ctime0=cut(ctime0,60,240);                                // check catch time 0
-      if (swmode==1 && mode==4) ctime1=cut(ctime1,60,240);                                // check catch time 1
+      if (swmode==0 && mode==0) {;updatePWM();r0=0;rts=MS+RDELAY;}                  // apply speed change fan 0
+      if (swmode==1 && mode==0) {;updatePWM();r1=0;rts=MS+RDELAY;}                  // apply speed change fan 1
+      if (swmode==0 && mode==1) {;updatePWM();r0=0;rts=MS+RDELAY;}             // aply boost speed change fan 0
+      if (swmode==1 && mode==1) {;updatePWM();r1=0;rts=MS+RDELAY;}             // aply boost speed change fan 1
+
+      if (swmode==0 && mode==2) btime0=cut(btime0,0,60);                              // check boost time fan 0
+      if (swmode==1 && mode==2) btime1=cut(btime1,0,60);                              // check boost time fan 1
+ 
+      if (swmode==0 && mode==3) {;catch0=cut(catch0,0,1);catchts0=MS;}                     // check catch fan 0
+      if (swmode==1 && mode==3) {;catch1=cut(catch1,0,1);catchts1=MS;}                     // check catch fan 1
+ 
+      if (swmode==0 && mode==4) ctime0=cut(ctime0,60,240);                            // check catch time fan 0
+      if (swmode==1 && mode==4) ctime1=cut(ctime1,60,240);                            // check catch time fan 1
 
       if (swmode==2) {;if (mode<0) mode=4;if (mode>4) mode=0;}                               // check menu mode
       
@@ -274,7 +259,6 @@ void loop() { //////////////////////////////////////////////////////////////////
     } 
   }
   enclast=encval;
-  
 }
 
 
@@ -292,7 +276,7 @@ void updatelcd() { /////////////////////////////////////////////////////////////
   }
   if (mode==3) {
     slcd(1,1,5,"CATCH");
-    if (catch0==0) slcd(7,1,-4,"OFF"); else slcd(7,1,-3,"ON");
+    if (catch0==0) slcd( 7,1,-4,"OFF"); else slcd( 7,1,-3,"ON");
     if (catch1==0) slcd(12,1,-4,"OFF"); else slcd(12,1,-3,"ON");
   }
   if (mode==4) {
@@ -303,38 +287,31 @@ void updatelcd() { /////////////////////////////////////////////////////////////
 void updatemarker() { /////////////////////////////////////////////////////////////////// update current marker
   slcd(0,1,1," ");slcd(6,1,1," ");slcd(11,1,1," ");
   if (!LOCK) {
-    if (swmode==0) slcd(6,1,1,">");
+    if (swmode==0) slcd( 6,1,1,">");
     if (swmode==1) slcd(11,1,1,">");
-    if (swmode==2) slcd(0,1,1,">");
+    if (swmode==2) slcd( 0,1,1,">");
   }
 }
 
 void updatespeed() { ///////////////////////////////////////////////////////////////////////// update fan speed
-
   slcd(1,0,5,"     ");
   if (fanstate0) {
-    if (MS<stop0) {
-      slcd(7,0,-4,"CAT");
-    } else {
-      if (bstate0) {
-        ilcd(1,0,2, (((long)btime0*60000)-(MS-(long)b0ts))/1000/60+1);
-      } else slcd(7,0,1," ");
+    if (MS<stop0) slcd(7,0,-4,"CAT");
+    else {
+      if (bstate0) ilcd(1,0,2, (((long)btime0*60000)-(MS-(long)b0ts))/1000/60+1);
+      else slcd(7,0,1," ");
       ilcd(7,0,-4,round(rpm0));
     }
-  }
-  else slcd(7,0,-4,"OFF");
-  
+  } else slcd(7,0,-4,"OFF");
+
   if (fanstate1) {
-    if (MS<stop1) {
-      slcd(12,0,-4,"CAT");
-    } else {
-      if (bstate1) {
-        ilcd(4,0,2, (((long)btime1*60000)-(MS-(long)b1ts))/1000/60+1);
-      } else slcd(12,0,1," ");
+    if (MS<stop1) slcd(12,0,-4,"CAT");
+    else {
+      if (bstate1) ilcd(4,0,2, (((long)btime1*60000)-(MS-(long)b1ts))/1000/60+1);
+      else slcd(12,0,1," ");
       ilcd(12,0,-4,round(rpm1));
     }
-  }
-  else slcd(12,0,-4,"OFF");
+  } else slcd(12,0,-4,"OFF");
 }
 
 void serinfo() { /////////////////////////////////////////////////////////////////////////// serial info output 
@@ -362,16 +339,10 @@ void updatePWM() { /////////////////////////////////////////////////////////////
   b0=cut(b0,FANMIN,FANMAX);b1=cut(b1,FANMIN,FANMAX);
   
   if (!fanstate0 || MS<stop0) OCR1A=0;
-  else {
-    if (bstate0) r=b0; else r=v0;
-    OCR1A=cut(r/(FANMAX/320.0)+r0,0,320);
-  }
+  else OCR1A=cut((bstate0?b0:v0)/(FANMAX/320.0)+r0,0,320);
 
   if (!fanstate1 || MS<stop1) OCR1B=0;
-  else {
-    if (bstate1) r=b1; else r=v1;
-    OCR1B=cut(r/(FANMAX/320.0)+r1,0,320); 
-  }
+  else OCR1B=cut((bstate1?b1:v1)/(FANMAX/320.0)+r1,0,320); 
 } 
 
 void rpmint0() {;rpmcount0++;} ///////////////////////////////////////////////////////////////// rpm interrupts
@@ -386,17 +357,17 @@ void save() { //////////////////////////////////////////////////////////////////
   eew(7,catch0);eew(8,catch1);eew(9,ctime0);eew(10,ctime1);
 }
 
-String sstr(String data, char separator, int index) { ///////////////////////////////// get saperated substring
+String sstr(String data, char sep, int idx) { ///////////////////////////////////////// get saperated substring
   int found=0;
   int si[]={0,-1};
   int mi=data.length()-1;
 
-  for (int i=0; i<=mi && found<=index; i++) {
-    if (data.charAt(i) == separator || i == mi) {
+  for (int i=0; i<=mi && found<=idx; i++) {
+    if (data.charAt(i) == sep || i == mi) {
       found++;si[0]=si[1]+1;si[1]=(i==mi) ? i+1 : i;
     }
   }
-  return found > index ? data.substring(si[0], si[1]) : "";
+  return found>idx?data.substring(si[0],si[1]):"";
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////// END
