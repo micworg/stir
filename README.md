@@ -16,7 +16,7 @@ All functions are controlled by the KY-040 encoder:
 
 * **Press briefly:** change between menu, stirrer 1 and stirrer 2
 * **Turn when menu is selected**: change between menu items (SPEED, BOOST, BTIME, CATCH, CTIME)
-* **Long press when menu is selected**: Lock all functions (unlock also by long press)
+* **Long press when menu is selected**: lock all functions (unlock also by long press)
 * **When a stirrer is selected**:
   * **SPEED**: turn sets speed, long press switches stirrer on or off.
   * **BOOST**: turn sets boost speed, long press activates/deactivates the boost function (running time is shown in the display).
@@ -27,8 +27,8 @@ All functions are controlled by the KY-040 encoder:
 ## Display Indicators:
 
 * **Bottom Left**: Menu
-* **Bottom centre/right**: Displays the set values for the stirrers depending on the selected menu item.
-* **Top Center/Right**: Displays the current stirrer speed (or 'OFF' or 'CAT' (Fishing)).
+* **Bottom centre/right**: displays the set values for the stirrers depending on the selected menu item.
+* **Top Center/Right**: displays the current stirrer speed (or 'OFF' or 'CAT' (Fishing)).
 * **Top left**: shows the remaining time of the boost function.
 
 ## Settings (in stir.ino)
