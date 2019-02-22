@@ -10,7 +10,7 @@ This is the Arduino sketch to build a double magnetic stirrer based on 2 fans, a
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup.
 
-## Overview of Functions
+## Functions
 
 All functions are controlled by the KY-040 encoder:
 
