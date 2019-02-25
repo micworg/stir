@@ -10,7 +10,7 @@ This is the Arduino sketch to build a double magnetic stirrer based on 2 fans, a
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup.
 
-## Functions
+## Overview of Functions
 
 All functions are controlled by the KY-040 encoder:
 
@@ -36,12 +36,15 @@ All functions are controlled by the KY-040 encoder:
 |Value|Description|
 |:----|:----------|
 |SPEEDINC|increment of speed values when turning the encoder|
-|FANMIN|fan minimum speed (should be a value at which the fan runs safely)|
-|FANMAX|maximum speed of the fan (it is important that this is the real maximum value of the fan)|
+|FANMIN|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
+|FANMAX|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
 |RINTERVAL|regulation interval (ms)|
 |RDELAY|extra regulation delay when value changes (ms)|
-|RTOL|regulation tolerance|
+|RTOL|regulation tolerance (rpm)|
 |CATCHSTOP|stop interval for stir fish catch function (ms)|
+|BOOSTRAMP|rise time for boost speed (ms)|
+|SINTERVAL|speed measurement interval (ms)|
+|SAVERAGE|speed measurement average|
 |PWM0, PWN1|PWM output pins|
 |I0, I1|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
 |CLK, DT, SW|pins for KY-040 encoder| 
@@ -50,6 +53,5 @@ All functions are controlled by the KY-040 encoder:
 
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/images/schematic_leonardo.png" width=500>
-<img src="https://github.com/micworg/stir/blob/master/images/schematic_promicro.png" width=500>
 <img src="https://github.com/micworg/stir/blob/master/images/schematic_uno.png" width=500>
 </p>
