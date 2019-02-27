@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019, v1.3.1)
+/////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019, v1.3.2)
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -191,12 +191,12 @@ void loop() { //////////////////////////////////////////////////////////////////
       
       if (swmode==0 && mode==0 && !LOCK) {                                                      // fan 0 on/off
         if (fanstate0==0) {;rts=MS+RDELAY;fanstate0=1;r0=0;updatePWM();}
-        else {;fanstate0=0;}
+        else {;fanstate0=0;bstate0=0;}
         updatespeed();
       }
       if (swmode==1 && mode==0 && !LOCK) {                                                      // fan 1 on/off
         if (fanstate1==0) {;rts=MS+RDELAY;fanstate1=1;r1=0;updatePWM();}
-        else {;fanstate1=0;}
+        else {;fanstate1=0;bstate1=0;}
         updatespeed();
       }
 
