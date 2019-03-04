@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019, v1.3.2)
+/////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019, v1.3.3)
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -9,7 +9,7 @@
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
 int FANMIN        = 200;                                                             // fan minimum speed (rpm)
-int FANMAX        = 1000;                                                            // fan maximum speed (rpm)
+int FANMAX        = 1600;                                                            // fan maximum speed (rpm)
 
 int CATCHSTOP     = 20000;                                                            // catch stop period (ms)
 double BOOSTRAMP  = 60000;                                                    // rise time for boost speed (ms)
@@ -32,6 +32,7 @@ int SINTERVAL     = 2000;                                                       
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
 int SAVETAG       = 1006;                                                                           // save tag 
+int SAVEDELAY     = 60000;                                                            // EEPROM save delay (ms)
 
 LiquidCrystal_I2C lcd(0x27,16,2);                                           // LCD display (connect to SDA/SCL)
 
@@ -81,7 +82,7 @@ void setup() { /////////////////////////////////////////////////////////////////
 
 void loop() { //////////////////////////////////////////////////////////////////////////////////////////// LOOP
 
-  if (SAVE>0 && MS-savets>60000) {;save();SAVE=0;savets=MS;} ////////////////////////// save settings if needed
+  if (SAVE>0 && MS-savets>SAVEDELAY) {;save();SAVE=0;savets=MS;} ////////////////////// save settings if needed
   
   if (catch0 && MS-catchts0>(long)ctime0*60000) { ////////////////////////////////////// check catch fish state
     catchts0=MS;stop0=MS+CATCHSTOP;
@@ -228,7 +229,7 @@ void loop() { //////////////////////////////////////////////////////////////////
       bdelay=0;
     }
     
-    bts=MS;
+    SAVE++;bts=MS;
   }
   if (digitalRead(SW)) bprocess=0;
 
