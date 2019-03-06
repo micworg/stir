@@ -23,6 +23,7 @@ All functions are controlled by the KY-040 encoder:
   * **BTIME**: turn sets the boost time in minutes.
   * **CATCH**: turn activates/deactivates the fishing function
   * **CTIME**: turn sets the interval in minutes for the fish catching function
+  * **RTIME**: speed rise time in seconds
 
 ## Display Indicators:
 
@@ -38,16 +39,15 @@ All functions are controlled by the KY-040 encoder:
 |SPEEDINC|increment of speed values when turning the encoder|
 |FANMIN|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
 |FANMAX|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
-|RINTERVAL|regulation interval (ms)|
-|RDELAY|extra regulation delay when value changes (ms)|
-|RTOL|regulation tolerance (rpm)|
 |CATCHSTOP|stop interval for stir fish catch function (ms)|
-|BOOSTRAMP|rise time for boost speed (ms)|
-|SINTERVAL|speed measurement interval (ms)|
-|SAVERAGE|speed measurement average|
 |PWM0, PWN1|PWM output pins|
 |I0, I1|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
 |CLK, DT, SW|pins for KY-040 encoder| 
+|RINTERVAL|regulation interval (ms)|
+|RDELAY|extra regulation delay when value changes (ms)|
+|RTOL|regulation tolerance (rpm)|
+|SINTERVAL|speed measurement interval (ms)|
+|SAVERAGE|speed measurement average|
 
 ## Schematics
 
