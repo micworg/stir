@@ -23,7 +23,7 @@ All functions are controlled by the KY-040 encoder:
   * **BTIME**: turn sets the boost time in minutes.
   * **CATCH**: turn activates/deactivates the fishing function
   * **CTIME**: turn sets the interval in minutes for the fish catching function
-  * **RTIME**: speed rise time in seconds
+  * **RTIME**: speed rise time in seconds (applys to power on, stirrer on, boost on and fish catching)
 
 ## Display Indicators:
 
