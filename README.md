@@ -51,6 +51,53 @@ All functions are controlled by the KY-040 encoder:
 |SAVETAG|parameter save identifier|
 |SAVEDELAY|delay in seconds before parameter will be saved to EEPROM|
 
+## API commands
+
+Command are colon separated an can be send via USB/Serial
+
+|Command|Description|
+|:------|:----------|
+|info|returns a colon separated string with all parameters (see below)|
+|version|returns the software version|
+|on:<0/1>|switch stirren on|
+|off:<0/1>|switch stirren off|
+|bon:<0/1>|switch boost mode on|
+|boff:<0/1>|switch boost mode off|
+|speed:<0/1>:<speed>|set stirrer speed|
+|bspeed:<0/1>:<speed>|set stirrer boost speed|
+|btime:<0/1>:<time>|set boost time|
+|con:<0/1>|switch catch mode on|
+|coff:<0/1>|switch catch mode off|
+|ctime:<0/1>:<time>|set catch mode interval|
+|rtime:<0/1>:<time>|set speed rise time|
+
+All commands return a colon separated string with all current parameters:
+
+|Element|Descriptoion|
+|:------|:-----------|
+|0|stirrer 0 state|
+|1|stirrer 0 speed|
+|2|stirrer 0 boost speed|
+|3|stirrer 0 rpm|
+|4|stirrer 0 averaged rpm|
+|5|stirrer 0 regulation value|
+|6|stirrer 0 boost time|
+|7|stirrer 0 fish catch mode state|
+|8|stirrer 0 fish catch mode time|
+|9|stirrer 0 speed rise time|
+|10|stirrer 1 state|
+|11|stirrer 1 speed|
+|12|stirrer 1 boost speed|
+|13|stirrer 1 rpm|
+|14|stirrer 1 averaged rpm|
+|15|stirrer 1 regulation value|
+|16|stirrer 1 boost time|
+|17|stirrer 1 fish catch mode state|
+|18|stirrer 1 fish catch mode time|
+|19|stirrer 1 speed rise time|
+|20|0=ok, 1=error|
+|21|software version|
+
 ## Schematics
 
 <p align="center">
