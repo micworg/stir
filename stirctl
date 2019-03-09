@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+###################################################################################### stir controll (mwx'2019)
+use Device::SerialPort;
+use Time::HiRes qw( usleep );
+
+$dev='/dev/ttyACM0';
+
+my $port = Device::SerialPort->new($dev); ################################################### setup serial port
+ 
+$port->baudrate(9600); 
+$port->databits(8); 
+$port->parity("none");
+$port->stopbits(1);
+ 
+$port->lookfor();
+
+$cmd=join(':',@ARGV);$cmd='info' if ($cmd=~/^\s*$/);
+  
+@r=split(':',&scmd($cmd));
+
+print  "              Left Right\n";
+printf("Stirrer On:   %4d  %4d\n", $r[0],$r[11]);
+printf("Speed:        %4d  %4d\n", $r[1],$r[12]);
+printf("Boost Speed:  %4d  %4d\n", $r[2],$r[13]);
+printf("RPM:          %4d  %4d\n", $r[3],$r[14]);
+printf("Average RPM:  %4d  %4d\n", $r[4],$r[15]);
+printf("Regulation:   %4d  %4d\n", $r[5],$r[16]);
+printf("Boost On:     %4d  %4d\n", $r[6],$r[17]);
+printf("Boost Time:   %4d  %4d\n", $r[7],$r[18]);
+printf("Catch On:     %4d  %4d\n", $r[8],$r[19]);
+printf("Catch Time:   %4d  %4d\n", $r[9],$r[20]);
+printf("Rise Time:    %4d  %4d\n", $r[10],$r[21]);
+printf("Error: %d\nVersion: %s\n", $r[23],$r[22]);
+
+
+sub scmd() { ##################################################################################### send command
+  my($cmd,$quiet)=@_;
+        
+  $port->write($cmd);
+  my $founddata=0;
+  $msg="";
+  for ($i=0;$i<1000;$i++) {
+ 
+    $in = $port->lookfor();
+    $founddata=1 if ($in ne "");
+    $msg.=$in;     
+     
+    last if ($in eq "" && $founddata);
+        
+    &usleep(2500);
+  }
+
+  $msg=~s/[\r\n]+//g;
+  return $msg;
+}
+
+########################################################################################################### END
