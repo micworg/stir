@@ -48,6 +48,8 @@ All functions are controlled by the KY-040 encoder:
 |RTOL|regulation tolerance (rpm)|
 |SINTERVAL|speed measurement interval (ms)|
 |SAVERAGE|speed measurement average|
+|SAVETAG|parameter save identifier|
+|SAVEDELAY|delay in seconds before parameter will be saved to EEPROM|
 
 ## Schematics
 
