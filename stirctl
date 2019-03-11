@@ -19,18 +19,21 @@ $cmd=join(':',@ARGV);$cmd='info' if ($cmd=~/^\s*$/);
 @r=split(':',&scmd($cmd));
 
 print  "              Left Right\n";
-printf("Stirrer On:   %4d  %4d\n", $r[0],$r[11]);
-printf("Speed:        %4d  %4d\n", $r[1],$r[12]);
-printf("Boost Speed:  %4d  %4d\n", $r[2],$r[13]);
-printf("RPM:          %4d  %4d\n", $r[3],$r[14]);
-printf("Average RPM:  %4d  %4d\n", $r[4],$r[15]);
-printf("Regulation:   %4d  %4d\n", $r[5],$r[16]);
-printf("Boost On:     %4d  %4d\n", $r[6],$r[17]);
-printf("Boost Time:   %4d  %4d\n", $r[7],$r[18]);
-printf("Catch On:     %4d  %4d\n", $r[8],$r[19]);
-printf("Catch Time:   %4d  %4d\n", $r[9],$r[20]);
-printf("Rise Time:    %4d  %4d\n", $r[10],$r[21]);
-printf("Error: %d\nVersion: %s\n", $r[23],$r[22]);
+printf("Stirrer On:   %6d  %6d\n", $r[0],$r[14]);
+printf("Speed:        %6d  %6d\n", $r[1],$r[15]);
+printf("Boost Speed:  %6d  %6d\n", $r[2],$r[16]);
+printf("RPM:          %6d  %6d\n", $r[3],$r[17]);
+printf("Average RPM:  %6d  %6d\n", $r[4],$r[18]);
+printf("Regulation:   %6d  %6d\n", $r[5],$r[19]);
+printf("Boost On:     %6d  %6d\n", $r[6],$r[20]);
+printf("Boost Time:   %6d  %6d\n", $r[7],$r[21]);
+printf("Catch On:     %6d  %6d\n", $r[8],$r[22]);
+printf("Catch Time:   %6d  %6d\n", $r[9],$r[23]);
+printf("Rise Time:    %6d  %6d\n", $r[10],$r[24]);
+printf("Off Time:     %6d  %6d\n", $r[11],$r[25]);
+printf("Boost Remain: %6d  %6d\n", $r[12],$r[26]);
+printf("Off Remain:   %6d  %6d\n", $r[13],$r[27]);
+printf("Error: %d\nVersion: %s\n", $r[29],$r[28]);
 
 
 sub scmd() { ##################################################################################### send command
@@ -51,6 +54,7 @@ sub scmd() { ###################################################################
   }
 
   $msg=~s/[\r\n]+//g;
+  print "$msg\n";
   return $msg;
 }
 

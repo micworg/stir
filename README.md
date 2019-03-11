@@ -23,14 +23,15 @@ All functions are controlled by the KY-040 encoder:
   * **BTIME**: turn sets the boost time in minutes.
   * **CATCH**: turn activates/deactivates the fishing function
   * **CTIME**: turn sets the interval in minutes for the fish catching function
-  * **RTIME**: speed rise time in seconds (applys to power on, stirrer on, boost on and fish catching)
+  * **RTIME**: speed rise time in seconds (applies to power on, stirrer on, boost on and fish catching)
+  * **OTIME**: switch stirrer off after time in hours (the timer activates immediately, 0 = switch off disabled)
 
 ## Display Indicators:
 
 * **Bottom Left**: Menu
 * **Bottom centre/right**: displays the set values for the stirrers depending on the selected menu item.
 * **Top Center/Right**: displays the current stirrer speed (or 'OFF' or 'CAT' (Fishing)).
-* **Top left**: shows the remaining time of the boost function.
+* **Top left**: shows the remaining time of the boost or switch off function.
 
 ## Settings (in stir.ino)
 
@@ -70,33 +71,42 @@ Command are colon separated an can be send via USB/Serial
 |`coff:<0/1>`|switch catch mode off|
 |`ctime:<0/1>:<min>`|set catch mode interval (60-240 min)|
 |`rtime:<0/1>:<sec>`|set speed rise time (0-240 sec)|
+|`otime:<0/1>:<hour>`|switch stirrer off after time in hours (1-99 hour, 0 deactivates switch off)|
 
 All commands return a colon separated string with all current parameters:
 
-|Element|Descriptoion|
-|:------|:-----------|
-|0|stirrer 0 state|
-|1|stirrer 0 speed|
-|2|stirrer 0 boost speed|
-|3|stirrer 0 rpm|
-|4|stirrer 0 averaged rpm|
-|5|stirrer 0 regulation value|
-|6|stirrer 0 boost time|
-|7|stirrer 0 fish catch mode state|
-|8|stirrer 0 fish catch mode time|
-|9|stirrer 0 speed rise time|
-|10|stirrer 1 state|
-|11|stirrer 1 speed|
-|12|stirrer 1 boost speed|
-|13|stirrer 1 rpm|
-|14|stirrer 1 averaged rpm|
-|15|stirrer 1 regulation value|
-|16|stirrer 1 boost time|
-|17|stirrer 1 fish catch mode state|
-|18|stirrer 1 fish catch mode time|
-|19|stirrer 1 speed rise time|
-|20|0=ok, 1=error|
-|21|software version|
+|Element|Stirrer|Description|
+|:------|:------|:-----------|
+| 0|0|state (0=on, 1=off)|
+| 1|0|speed (rpm)|
+| 2|0|boost speed (rpm)|
+| 3|0|rpm|
+| 4|0|averaged rpm|
+| 5|0|regulation value|
+| 6|0|boost state (0=on, 1=off)|
+| 7|0|boost time (min)|
+| 8|0|fish catch mode state (0=on, 1=off)|
+| 9|0|fish catch time interval (min)|
+|10|0|speed rise time (sec)|
+|11|0|switch off time (hour)|
+|12|0|boost remain (sec)|
+|13|0|off timer remain (sec)|
+|14|1|state (0=on, 1=off)|
+|15|1|speed (rpm)|
+|16|1|boost speed (rpm)|
+|17|1|rpm|
+|18|1|averaged rpm|
+|19|1|regulation value|
+|20|1|boost state (0=on, 1=off)|
+|21|1|boost time (min)|
+|22|1|fish catch mode state (0=on, 1=off)|
+|23|1|fish catch time interval (min)|
+|24|1|speed rise time (sec)|
+|25|1|switch off time (hour)|
+|26|1|boost remain (sec)|
+|27|1|off timer remain (sec)|
+|28||0=ok, 1=error|
+|29||software version|
 
 ## Schematics
 

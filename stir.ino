@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.1";
+String VERSION    = "1.5.2";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -33,7 +33,7 @@ int RTOL          = 8;                                                          
 long SINTERVAL    = 2000;                                                         // speed measurement interval 
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
-int SAVETAG       = 1007;                                                                           // save tag 
+int SAVETAG       = 1011;                                                                           // save tag 
 long SAVEDELAY    = 60000;                                                            // EEPROM save delay (ms)
 
 byte aright[]     = {0x00,0x08,0x0C,0x0E,0x0C,0x08,0x00,0x00};                                 // LCD character
@@ -43,17 +43,17 @@ LiquidCrystal_I2C lcd(0x27,16,2);                                           // L
 
 int v[2],b[2],r[2]={0};double q,rpm[2]={0},xpm[2]={0},xb[2]={0},xv[2]={0},rtime[2];     // speed and regulation
 long ac[2]={0},bc[2]={0};                                                              // interrupt rpm counter
-long xts,sts,rts,swts,buts,savets,catts[2],stop[2],bts[2],vts[2];                                     // timing
+long xts,sts,rts,swts,buts,savets,catts[2],stop[2],bts[2],vts[2],ots[2];                              // timing
 int bdelay,bprocess=0,enclast,encval,M=2,S=0;                                      // button/encoder processing
 int F[2],bstate[2]={0},btime[2],cat[2],ctime[2],cstate[2]={0},bclr=0,SAVE=0,LOCK=0;         // operating states
-char form[8],out[20];                                                                          // string buffer
-String cmd[8];int icmd[8];
+int ostate[2]={0},otime[2]={0};                                                                    // off timer
+char form[8],out[20];String cmd[8];int icmd[8];                                                // string buffer
+
 
 void setup() { ////////////////////////////////////////////////////////////////////////////////////////// SETUP  
   Serial.begin(9600);                                                                           // start serial
   
   lcd.init();lcd.clear();lcd.backlight();lcd.createChar(0,aright);lcd.createChar(1,aup);      // initialize lcd
-
   pinMode(PWM0,OUTPUT);pinMode(PWM1,OUTPUT);                                                    // set PWM pins
   pinMode(CLK,INPUT);pinMode(DT,INPUT);pinMode(SW,INPUT);                                    // set KY-040 pins
   digitalWrite(CLK,true);digitalWrite(DT,true);digitalWrite(SW,true);               // turn ON pullup resistors
@@ -77,7 +77,7 @@ void setup() { /////////////////////////////////////////////////////////////////
 
   enclast=digitalRead(CLK);                                                                // get encoder state
 
-  for (int i=0;i<2;i++) catts[i]=stop[i]=vts[i]=MS;xts=sts=rts=swts=buts=savets=MS;                    // timer
+  for (int i=0;i<2;i++) catts[i]=stop[i]=vts[i]=ots[i]=MS;xts=sts=rts=swts=buts=savets=MS;             // timer
   updatePWM();updatelcd();updatespeed();updatemarker();                                           // update all
 
   slcd(0,0,5,VERSION);                                                                          // show version
@@ -89,24 +89,30 @@ void loop() { //////////////////////////////////////////////////////////////////
   if (Serial.available() > 0) { ////////////////////////////////////////////////////////// serial communication
     int n=cutcmd(Serial.readString());
     int err=1;
+    int i=cut(icmd[1],0,1);
     if (cmd[0]=="info"    && n==1) {;err=0;}
     if (cmd[0]=="version" && n==1) {;SXN(VERSION);return;}
-    if (cmd[0]=="speed"   && n==3) {;v[icmd[1]]=cut(icmd[2],FANMIN,FANMAX);err=0;}
-    if (cmd[0]=="bspeed"  && n==3) {;b[icmd[1]]=cut(icmd[2],FANMIN,FANMAX);err=0;}
-    if (cmd[0]=="btime"   && n==3) {;btime[icmd[1]]=cut(icmd[2],0,60);err=0;}
-    if (cmd[0]=="ctime"   && n==3) {;ctime[icmd[1]]=cut(icmd[2],60,240);err=0;}
-    if (cmd[0]=="rtime"   && n==3) {;rtime[icmd[1]]=cut(icmd[2],0,240);err=0;}
-    if (cmd[0]=="on"      && n==2) {;fset(cut(icmd[1],0,1),1);err=0;}
-    if (cmd[0]=="off"     && n==2) {;fset(cut(icmd[1],0,1),0);err=0;}
-    if (cmd[0]=="bon"     && n==2) {;bset(cut(icmd[1],0,1),1);err=0;}
-    if (cmd[0]=="boff"    && n==2) {;bset(cut(icmd[1],0,1),0);err=0;}
-    if (cmd[0]=="con"     && n==2) {;cat[(int)cut(icmd[1],0,1)]=1;catts[(int)cut(icmd[1],0,1)]=MS;err=0;}
-    if (cmd[0]=="coff"    && n==2) {;cat[(int)cut(icmd[1],0,1)]=0;catts[(int)cut(icmd[1],0,1)]=MS;err=0;}
+    if (cmd[0]=="save"    && n==1) {;save();}
+    if (cmd[0]=="speed"   && n==3) {;v[i]=cut(icmd[2],FANMIN,FANMAX);err=0;}
+    if (cmd[0]=="bspeed"  && n==3) {;b[i]=cut(icmd[2],FANMIN,FANMAX);err=0;}
+    if (cmd[0]=="btime"   && n==3) {;btime[i]=cut(icmd[2],0,60);err=0;}
+    if (cmd[0]=="ctime"   && n==3) {;ctime[i]=cut(icmd[2],60,240);err=0;}
+    if (cmd[0]=="rtime"   && n==3) {;rtime[i]=cut(icmd[2],0,240);err=0;}
+    if (cmd[0]=="on"      && n==2) {;fset(i,1);err=0;}
+    if (cmd[0]=="off"     && n==2) {;fset(i,0);err=0;}
+    if (cmd[0]=="bon"     && n==2) {;bset(i,1);err=0;}
+    if (cmd[0]=="boff"    && n==2) {;bset(i,0);err=0;}
+    if (cmd[0]=="con"     && n==2) {;cat[i]=1;catts[i]=MS;err=0;}
+    if (cmd[0]=="coff"    && n==2) {;cat[i]=0;catts[i]=MS;err=0;}
+    if (cmd[0]=="otime"   && n==3) {;oset(i,icmd[2]);err=0;}
+    
     updatelcd();
     for (int i=0;i<2;i++) {
       SX(F[i]);SX(":");SX((int)(v[i]));SX(":");SX((int)(b[i]));SX(":");SX(rpm[i]);SX(":"); 
       SX(xpm[i]);SX(":");SX(r[i]);SX(":");SX(bstate[i]);SX(":");SX(btime[i]);SX(":"); 
-      SX(cat[i]);SX(":");SX(ctime[i]);SX(":");SX(rtime[i]);SX(":");
+      SX(cat[i]);SX(":");SX(ctime[i]);SX(":");SX(rtime[i]);SX(":");SX(otime[i]);SX(":");
+      if (bstate[i]) SX((((long)btime[i]*60000)-(MS-(long)bts[i]))/1000+1); else SX(0);SX(":");
+      if (ostate[i]) SX((((long)otime[i]*3600000)-(MS-(long)ots[i]))/1000+1); else SX(0);SX(":");
     }
     SX(VERSION);SX(":");SXN(err);
   }
@@ -115,6 +121,10 @@ void loop() { //////////////////////////////////////////////////////////////////
   if (MS-savets>SAVEDELAY/5) bclr=1;
   
   for (int i=0;i<2;i++) {
+    
+    if (ostate[i] && MS-ots[i]>(long)otime[i]*3600000) { ////////////////////////////////////// check off timer
+      otime[i]=0;ostate[i]=0;fset(i,0);
+    }
     
     if (cat[i] && MS-catts[i]>(long)ctime[i]*60000 && F[i]==1) { //////////////////////////// initiate cat fish
       catts[i]=MS;cstate[i]=1;F[i]=0;stop[i]=MS;updatePWM();updatespeed();
@@ -199,6 +209,7 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==3) cat[M]++;        // cat 0 on/off
           if (S==4) ctime[M]+=10;    // cat time 0 up
           if (S==5) rtime[M]+=10;    // rise time 0 up
+          if (S==6) otime[M]++;      // off time 0 up
         }
       } else {                                                                 // turn encoder counterclockwise
         if (M==2) S--;               // scroll menu
@@ -209,20 +220,22 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==3) cat[M]--;        // cat 0 on/off
           if (S==4) ctime[M]-=10;    // cat time 0 down
           if (S==5) rtime[M]-=10;    // rise time 0 down
+          if (S==6) otime[M]--;      // off time 0 down
         }
       }
       
       for (int i=0;i<2;i++) if (b[i]<v[i]) b[i]=v[i];
 
       if (M!=2) {
-        if (S<=1) {;updatePWM();rts=MS+RDELAY;}                             // apply (boost) speed change fan 1
-        if (S==2) btime[M]=cut(btime[M],0,60);                                        // check boost time fan 0
-        if (S==3) {;cat[M]=cut(cat[M],0,1);catts[0]=MS;}                                     // check cat fan 0
-        if (S==4) ctime[M]=cut(ctime[M],60,240);                                        // check cat time fan 0
-        if (S==5) rtime[M]=cut(rtime[M],0,240);                                        // check rise time fan 0
+        if (S<=1) {;updatePWM();rts=MS+RDELAY;}                                   // apply (boost) speed change
+        if (S==2) btime[M]=cut(btime[M],0,60);                                              // check boost time
+        if (S==3) {;cat[M]=cut(cat[M],0,1);catts[0]=MS;}                                           // check cat
+        if (S==4) ctime[M]=cut(ctime[M],60,240);                                              // check cat time
+        if (S==5) rtime[M]=cut(rtime[M],0,240);                                              // check rise time
+        if (S==6) oset(M,otime[M]);                                                           // check off time
       }
       
-      if (M==2) S=cut(S,0,5);                                                                // check menu mode
+      if (M==2) S=cut(S,0,6);                                                                // check menu mode
       
       SAVE++;updatelcd();delay(50);
     } 
@@ -232,6 +245,10 @@ void loop() { //////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////// SUPPORT
+
+void oset(int n,int t) { ///////////////////////////////////////////////////////////////// set switch off timer
+  otime[n]=cut(t,0,99);ots[n]=MS;ostate[n]=otime[n]?1:0;
+}
 
 void fset(int n,int s) { /////////////////////////////////////////////////////////////// set fan state (on/off)
   if (s==1) {
@@ -243,9 +260,9 @@ void fset(int n,int s) { ///////////////////////////////////////////////////////
 
 void bset(int n,int s) { ///////////////////////////////////////////////////////////// set boost state (on/off)
   if (s==1) {
-    rts=MS+RDELAY;bstate[M]=1;bts[M]=MS;F[M]=1;vts[M]=MS;  
+    rts=MS+RDELAY;bstate[n]=1;bts[n]=MS;F[n]=1;vts[n]=MS;  
   } else {
-    bstate[M]=0;rts=MS+RDELAY;updatePWM();  
+    bstate[n]=0;rts=MS+RDELAY;updatePWM();  
   }
 }
 
@@ -260,6 +277,7 @@ void updatelcd() { /////////////////////////////////////////////////////////////
     }
     if (S==4) {;slcd(1,1,5,"CTIME");ilcd(7+i*5,1,-4,int(ctime[i]));}
     if (S==5) {;slcd(1,1,5,"RTIME");ilcd(7+i*5,1,-4,int(rtime[i]));}
+    if (S==6) {;slcd(1,1,5,"OTIME");ilcd(7+i*5,1,-4,int(otime[i]));}
   }
 }  
   
@@ -276,7 +294,8 @@ void updatespeed() { ///////////////////////////////////////////////////////////
     else {
       if (F[i]) {
         if (bstate[i]) ilcd(1+i*3,0,-2, (((long)btime[i]*60000)-(MS-(long)bts[i]))/1000/60+1);
-        else slcd(7+i*5,0,1," ");
+        else if (ostate[i]) ilcd(1+i*3,0,-2, (((long)otime[i]*3600000)-(MS-(long)ots[i]))/1000/60/60+1);
+        else slcd(0,0,1," ");
         ilcd(7+i*5,0,-4,round(xpm[i]));
         if ((!bstate[i] && xv[i]<v[i]) || (bstate[i] && xb[i]<b[i])) clcd(6+i*5,0,1);
       } else slcd(7+i*5,0,-4,"OFF");
