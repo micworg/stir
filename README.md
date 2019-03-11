@@ -63,13 +63,13 @@ Command are colon separated an can be send via USB/Serial
 |`off:<0/1>`|switch stirren off|
 |`bon:<0/1>`|switch boost mode on|
 |`boff:<0/1>`|switch boost mode off|
-|`speed:<0/1>:<rpm>`|set stirrer speed|
-|`bspeed:<0/1>:<rpm>`|set stirrer boost speed|
-|`btime:<0/1>:<min>`|set boost time|
+|`speed:<0/1>:<rpm>`|set stirrer speed (FANMIN-FANMAX rpm)|
+|`bspeed:<0/1>:<rpm>`|set stirrer boost speed (speed-FANMAX rpm)|
+|`btime:<0/1>:<min>`|set boost time (0-60)|
 |`con:<0/1>`|switch catch mode on|
 |`coff:<0/1>`|switch catch mode off|
-|`ctime:<0/1>:<min>`|set catch mode interval|
-|`rtime:<0/1>:<min>`|set speed rise time|
+|`ctime:<0/1>:<min>`|set catch mode interval (60-240 min)|
+|`rtime:<0/1>:<sec>`|set speed rise time (0-240 sec)|
 
 All commands return a colon separated string with all current parameters:
 
