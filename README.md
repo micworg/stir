@@ -57,19 +57,19 @@ Command are colon separated an can be send via USB/Serial
 
 |Command|Description|
 |:------|:----------|
-|info|returns a colon separated string with all parameters (see below)|
-|version|returns the software version|
-|on:<0/1>|switch stirren on|
-|off:<0/1>|switch stirren off|
-|bon:<0/1>|switch boost mode on|
-|boff:<0/1>|switch boost mode off|
-|speed:<0/1>:<speed>|set stirrer speed|
-|bspeed:<0/1>:<speed>|set stirrer boost speed|
-|btime:<0/1>:<time>|set boost time|
-|con:<0/1>|switch catch mode on|
-|coff:<0/1>|switch catch mode off|
-|ctime:<0/1>:<time>|set catch mode interval|
-|rtime:<0/1>:<time>|set speed rise time|
+|`info`|returns a colon separated string with all parameters (see below)|
+|`version`|returns the software version|
+|`on:<0/1>`|switch stirren on|
+|`off:<0/1>`|switch stirren off|
+|`bon:<0/1>`|switch boost mode on|
+|`boff:<0/1>`|switch boost mode off|
+|`speed:<0/1>:<speed>`|set stirrer speed|
+|`bspeed:<0/1>:<speed>`|set stirrer boost speed|
+|`btime:<0/1>:<time>`|set boost time|
+|`con:<0/1>`|switch catch mode on|
+|`coff:<0/1>`|switch catch mode off|
+|`ctime:<0/1>:<time>`|set catch mode interval|
+|`rtime:<0/1>:<time>`|set speed rise time|
 
 All commands return a colon separated string with all current parameters:
 
