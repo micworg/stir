@@ -36,20 +36,20 @@ All functions are controlled by the KY-040 encoder:
 
 |Value|Description|
 |:----|:----------|
-|SPEEDINC|increment of speed values when turning the encoder|
-|FANMIN|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
-|FANMAX|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
-|CATCHSTOP|stop interval for stir fish catch function (ms)|
-|PWM0, PWN1|PWM output pins|
-|I0, I1|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
-|CLK, DT, SW|pins for KY-040 encoder| 
-|RINTERVAL|regulation interval (ms)|
-|RDELAY|extra regulation delay when value changes (ms)|
-|RTOL|regulation tolerance (rpm)|
-|SINTERVAL|speed measurement interval (ms)|
-|SAVERAGE|speed measurement average|
-|SAVETAG|parameter save identifier|
-|SAVEDELAY|delay in seconds before parameter will be saved to EEPROM|
+|`SPEEDINC`|increment of speed values when turning the encoder|
+|`FANMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
+|`FANMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
+|`CATCHSTOP`|stop interval for stir fish catch function (ms)|
+|`PWM0`, `PWN1`|PWM output pins|
+|`I0`, `I1`|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
+|`CLK`, `DT`, `SW`|pins for KY-040 encoder| 
+|`RINTERVAL`|regulation interval (ms)|
+|`RDELAY`|extra regulation delay when value changes (ms)|
+|`RTOL`|regulation tolerance (rpm)|
+|`SINTERVAL`|speed measurement interval (ms)|
+|`SAVERAGE`|speed measurement average|
+|`SAVETAG`|parameter save identifier|
+|`SAVEDELAY`|delay in seconds before parameter will be saved to EEPROM|
 
 ## API commands
 
@@ -63,13 +63,13 @@ Command are colon separated an can be send via USB/Serial
 |`off:<0/1>`|switch stirren off|
 |`bon:<0/1>`|switch boost mode on|
 |`boff:<0/1>`|switch boost mode off|
-|`speed:<0/1>:<speed>`|set stirrer speed|
-|`bspeed:<0/1>:<speed>`|set stirrer boost speed|
-|`btime:<0/1>:<time>`|set boost time|
+|`speed:<0/1>:<rpm>`|set stirrer speed|
+|`bspeed:<0/1>:<rpm>`|set stirrer boost speed|
+|`btime:<0/1>:<min>`|set boost time|
 |`con:<0/1>`|switch catch mode on|
 |`coff:<0/1>`|switch catch mode off|
-|`ctime:<0/1>:<time>`|set catch mode interval|
-|`rtime:<0/1>:<time>`|set speed rise time|
+|`ctime:<0/1>:<min>`|set catch mode interval|
+|`rtime:<0/1>:<min>`|set speed rise time|
 
 All commands return a colon separated string with all current parameters:
 
