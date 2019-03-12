@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.2";
+String VERSION    = "1.5.3";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -209,7 +209,7 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==3) cat[M]++;        // cat 0 on/off
           if (S==4) ctime[M]+=10;    // cat time 0 up
           if (S==5) rtime[M]+=10;    // rise time 0 up
-          if (S==6) otime[M]++;      // off time 0 up
+          if (S==6) otime[M]+=3;     // off time 0 up
         }
       } else {                                                                 // turn encoder counterclockwise
         if (M==2) S--;               // scroll menu
@@ -220,7 +220,7 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==3) cat[M]--;        // cat 0 on/off
           if (S==4) ctime[M]-=10;    // cat time 0 down
           if (S==5) rtime[M]-=10;    // rise time 0 down
-          if (S==6) otime[M]--;      // off time 0 down
+          if (S==6) otime[M]-=3;     // off time 0 down
         }
       }
       
@@ -248,6 +248,7 @@ void loop() { //////////////////////////////////////////////////////////////////
 
 void oset(int n,int t) { ///////////////////////////////////////////////////////////////// set switch off timer
   otime[n]=cut(t,0,99);ots[n]=MS;ostate[n]=otime[n]?1:0;
+  SAVE++;
 }
 
 void fset(int n,int s) { /////////////////////////////////////////////////////////////// set fan state (on/off)
@@ -256,6 +257,7 @@ void fset(int n,int s) { ///////////////////////////////////////////////////////
   } else {
     F[n]=0;bstate[n]=0;
   }
+  SAVE++;
 }
 
 void bset(int n,int s) { ///////////////////////////////////////////////////////////// set boost state (on/off)
@@ -264,6 +266,7 @@ void bset(int n,int s) { ///////////////////////////////////////////////////////
   } else {
     bstate[n]=0;rts=MS+RDELAY;updatePWM();  
   }
+  SAVE++;
 }
 
 void updatelcd() { ///////////////////////////////////////////////////////////////////////////////// update LCD
@@ -295,7 +298,6 @@ void updatespeed() { ///////////////////////////////////////////////////////////
       if (F[i]) {
         if (bstate[i]) ilcd(1+i*3,0,-2, (((long)btime[i]*60000)-(MS-(long)bts[i]))/1000/60+1);
         else if (ostate[i]) ilcd(1+i*3,0,-2, (((long)otime[i]*3600000)-(MS-(long)ots[i]))/1000/60/60+1);
-        else slcd(0,0,1," ");
         ilcd(7+i*5,0,-4,round(xpm[i]));
         if ((!bstate[i] && xv[i]<v[i]) || (bstate[i] && xb[i]<b[i])) clcd(6+i*5,0,1);
       } else slcd(7+i*5,0,-4,"OFF");
