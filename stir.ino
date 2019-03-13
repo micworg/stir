@@ -7,12 +7,18 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.3";
+String VERSION    = "1.5.4";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
 int FANMIN        = 200;            // fan minimum speed (should be a value at which the fan runs safely) (rpm)
 int FANMAX        = 1600;              // fan maximum speed (should be the real maximum value of the fan) (rpm)
+
+int BOFF          = 0;                                   // if set boost off will also turn the normal mode off
+
+int CINC          = 10;                                                                // CTIME increment (min)
+int RINC          = 10;                                                                // RTIME increment (min)
+int OINC          = 3;                                                                // OTIME increment (hour)
 
 long CATCHSTOP    = 20000;                                                       // fish catch stop period (ms)
 
@@ -179,7 +185,7 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (F[M]==0) fset(M,1); else fset(M,0);
         }
         if (S==1 && !LOCK) {                                                                    // boost on/off
-          if (bstate[M]==0) bset(M,1); else bset(M,0);
+          if (bstate[M]==0) bset(M,1); else {;bset(M,0);if (BOFF) fset(M,0);}
           bclr=1;
         }
       }
@@ -207,9 +213,9 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==1) b[M]+=SPEEDINC;  // boost 0 speed up
           if (S==2) btime[M]++;      // boost time 0 up
           if (S==3) cat[M]++;        // cat 0 on/off
-          if (S==4) ctime[M]+=10;    // cat time 0 up
-          if (S==5) rtime[M]+=10;    // rise time 0 up
-          if (S==6) otime[M]+=3;     // off time 0 up
+          if (S==4) ctime[M]+=CINC;  // cat time 0 up
+          if (S==5) rtime[M]+=RINC;  // rise time 0 up
+          if (S==6) otime[M]+=OINC;  // off time 0 up
         }
       } else {                                                                 // turn encoder counterclockwise
         if (M==2) S--;               // scroll menu
@@ -218,9 +224,9 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==1) b[M]-=SPEEDINC;  // boost 0 speed down
           if (S==2) btime[M]--;      // boost time 0 down
           if (S==3) cat[M]--;        // cat 0 on/off
-          if (S==4) ctime[M]-=10;    // cat time 0 down
-          if (S==5) rtime[M]-=10;    // rise time 0 down
-          if (S==6) otime[M]-=3;     // off time 0 down
+          if (S==4) ctime[M]-=CINC;  // cat time 0 down
+          if (S==5) rtime[M]-=RINC;  // rise time 0 down
+          if (S==6) otime[M]-=OINC;  // off time 0 down
         }
       }
       
