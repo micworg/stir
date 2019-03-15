@@ -17,7 +17,7 @@ int FANMAX        = 1600;              // fan maximum speed (should be the real 
 int BOFF          = 0;                                   // if set boost off will also turn the normal mode off
 
 int CINC          = 10;                                                                // CTIME increment (min)
-int RINC          = 10;                                                                // RTIME increment (min)
+int RINC          = 10;                                                                // RTIME increment (sec)
 int OINC          = 3;                                                                // OTIME increment (hour)
 
 long CATCHSTOP    = 20000;                                                       // fish catch stop period (ms)
