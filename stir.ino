@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.4";
+String VERSION    = "1.5.5";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -338,7 +338,7 @@ void updatePWM() { /////////////////////////////////////////////////////////////
     v[i]=cut(v[i],FANMIN,FANMAX);
     b[i]=cut(b[i],FANMIN,FANMAX);
     calcramp(i);
-    if (!F[i]) setPWM(i,0); else setPWM(i,cut((bstate[0]?xb[0]:xv[0])/(FANMAX/320.0)+r[0],0,320));
+    if (!F[i]) setPWM(i,0); else setPWM(i,cut((bstate[i]?xb[i]:xv[i])/(FANMAX/320.0)+r[i],0,320));
   }
 } 
 
