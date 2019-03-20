@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.6";
+String VERSION    = "1.5.7";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -235,7 +235,7 @@ void loop() { //////////////////////////////////////////////////////////////////
       if (M!=2) {
         if (S<=1) {;updatePWM();rts=MS+RDELAY;}                                   // apply (boost) speed change
         if (S==2) btime[M]=cut(btime[M],0,60);                                              // check boost time
-        if (S==3) {;cat[M]=cut(cat[M],0,1);catts[0]=MS;}                                           // check cat
+        if (S==3) {;cat[M]=cut(cat[M],0,1);catts[M]=MS;}                                           // check cat
         if (S==4) ctime[M]=cut(ctime[M],60,240);                                              // check cat time
         if (S==5) rtime[M]=cut(rtime[M],0,240);                                              // check rise time
         if (S==6) oset(M,otime[M]);                                                           // check off time
