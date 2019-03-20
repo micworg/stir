@@ -54,7 +54,7 @@ All functions are controlled by the KY-040 encoder:
 
 ## API commands
 
-Command are colon separated an can be send via USB/Serial
+Commands are colon separated an can be send via USB/Serial
 
 |Command|Description|
 |:------|:----------|
