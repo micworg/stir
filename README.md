@@ -14,24 +14,24 @@ In order to put the stirrer into operation you have to change the settings in st
 
 All functions are controlled by the KY-040 encoder:
 
-* **Press briefly:** change between menu, stirrer 1 and stirrer 2
+* **Short Press:** change between menu, stirrer 1 and stirrer 2
 * **Turn when menu is selected**: change between menu items (SPEED, BOOST, BTIME, CATCH, CTIME)
 * **Long press when menu is selected**: lock all functions (unlock also by long press)
 * **When a stirrer is selected**:
   * **SPEED**: turn sets speed, long press switches stirrer on or off.
   * **BOOST**: turn sets boost speed, long press activates/deactivates the boost function (running time is shown in the display).
-  * **BTIME**: turn sets the boost time in minutes.
+  * **BTIME**: turn changes the boost time in minutes.
   * **CATCH**: turn activates/deactivates the fishing function
-  * **CTIME**: turn sets the interval in minutes for the fish catching function
-  * **RTIME**: speed rise time in seconds (applies to power on, stirrer on, boost on and fish catching)
-  * **OTIME**: switch stirrer off after time in hours (the timer activates immediately, 0 = switch off disabled)
+  * **CTIME**: turn changes the interval in minutes for the fish catching function
+  * **RTIME**: turn changes speed rise time in seconds (applies to power on, stirrer on, boost on and fish catching)
+  * **OTIME**: turn changes switch off time in hours (the timer activates immediately, 0 = switch off disabled)
 
 ## Display Indicators:
 
 * **Bottom Left**: Menu
-* **Bottom centre/right**: displays the set values for the stirrers depending on the selected menu item.
+* **Bottom Center/Right**: displays the set values for the stirrers depending on the selected menu item.
 * **Top Center/Right**: displays the current stirrer speed (or 'OFF' or 'CAT' (Fishing)).
-* **Top left**: shows the remaining time of the boost or switch off function.
+* **Top Left**: shows the remaining time of the boost or switch off function.
 
 ## Settings (in stir.ino)
 
@@ -75,38 +75,38 @@ Command are colon separated an can be send via USB/Serial
 
 All commands return a colon separated string with all current parameters:
 
-|Element|Stirrer|Description|
-|:------|:------|:-----------|
-| 0|0|state (0=on, 1=off)|
-| 1|0|speed (rpm)|
-| 2|0|boost speed (rpm)|
-| 3|0|rpm|
-| 4|0|averaged rpm|
-| 5|0|regulation value|
-| 6|0|boost state (0=on, 1=off)|
-| 7|0|boost time (min)|
-| 8|0|fish catch mode state (0=on, 1=off)|
-| 9|0|fish catch time interval (min)|
-|10|0|speed rise time (sec)|
-|11|0|switch off time (hour)|
-|12|0|boost remain (sec)|
-|13|0|off timer remain (sec)|
-|14|1|state (0=on, 1=off)|
-|15|1|speed (rpm)|
-|16|1|boost speed (rpm)|
-|17|1|rpm|
-|18|1|averaged rpm|
-|19|1|regulation value|
-|20|1|boost state (0=on, 1=off)|
-|21|1|boost time (min)|
-|22|1|fish catch mode state (0=on, 1=off)|
-|23|1|fish catch time interval (min)|
-|24|1|speed rise time (sec)|
-|25|1|switch off time (hour)|
-|26|1|boost remain (sec)|
-|27|1|off timer remain (sec)|
-|28||0=ok, 1=error|
-|29||software version|
+|Element|Stirrer|Variable in stir.ino|Description|
+|:------|:------|:-------------------|:----------|
+| 0|0|`F[0]`     |state (0=on, 1=off)|
+| 1|0|`v[0]`     |speed (rpm)|
+| 2|0|`b[0]`     |boost speed (rpm)|
+| 3|0|`rpm[0]`   |rpm|
+| 4|0|`xpm[0]`   |averaged rpm|
+| 5|0|`r[0]`     |regulation value|
+| 6|0|`bstate[0]`|boost state (0=on, 1=off)|
+| 7|0|`btime[0]` |boost time (min)|
+| 8|0|`cat[0]`   |fish catch mode state (0=on, 1=off)|
+| 9|0|`ctime[0]` |fish catch time interval (min)|
+|10|0|`rtime[0]` |speed rise time (sec)|
+|11|0|`otime[0]` |switch off time (hour)|
+|12|0|           |boost remain (sec)|
+|13|0|           |off timer remain (sec)|
+|14|1|`F[1]`     |state (0=on, 1=off)|
+|15|1|`v[1]`     |speed (rpm)|
+|16|1|`b[1]`     |boost speed (rpm)|
+|17|1|`rpm[1]`   |rpm|
+|18|1|`xpm[1]`   |averaged rpm|
+|19|1|`r[1]`     |regulation value|
+|20|1|`bstate[1]`|boost state (0=on, 1=off)|
+|21|1|`btime[1]` |boost time (min)|
+|22|1|`cat[1]`   |fish catch mode state (0=on, 1=off)|
+|23|1|`ctime[1]` |fish catch time interval (min)|
+|24|1|`rtime[1]` |speed rise time (sec)|
+|25|1|`otime[1]` |switch off time (hour)|
+|26|1|           |boost remain (sec)|
+|27|1|           |off timer remain (sec)|
+|28| |           |0=ok, 1=error|
+|29| |           |software version|
 
 ## Schematics
 

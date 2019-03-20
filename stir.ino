@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.5";
+String VERSION    = "1.5.6";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -40,7 +40,7 @@ long SINTERVAL    = 2000;                                                       
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
 int SAVETAG       = 1011;                                                                           // save tag 
-long SAVEDELAY    = 60000;                                                            // EEPROM save delay (ms)
+long SAVEDELAY    = 10000;                                                            // EEPROM save delay (ms)
 
 byte aright[]     = {0x00,0x08,0x0C,0x0E,0x0C,0x08,0x00,0x00};                                 // LCD character
 byte aup[]        = {0x04,0x0E,0x1F,0x00,0x00,0x00,0x00,0x00};
@@ -179,7 +179,7 @@ void loop() { //////////////////////////////////////////////////////////////////
       if (M==2) {                                                                                // lock/unlock
         if (LOCK==0) LOCK=1;
         else LOCK=0;
-        updatemarker();save();
+        updatemarker();
       } else {
         if (S==0 && !LOCK) {                                                                      // fan on/off
           if (F[M]==0) fset(M,1); else fset(M,0);
@@ -190,7 +190,7 @@ void loop() { //////////////////////////////////////////////////////////////////
         }
       }
       
-      updatespeed();bdelay=0;
+      save();updatespeed();bdelay=0;
       
     } else if (bdelay>0 && bdelay<20 && !LOCK) {          // short button press, switch: menu -> fan 0 -> fan 1
       M++;if (M>2) M=0;
