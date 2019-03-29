@@ -43,12 +43,13 @@ All functions are controlled by the KY-040 encoder:
 |`FANMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
 |`FANMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
 |`BOFF`|if set boost off will also turn the normal mode off|
-|`BINC`|BTIME increment (min)|
-|`CINC`|CTIME increment (min)|
-|`RINC`|RTIME increment (sec)|
-|`OINC`|OTIME increment (hour)|
+|`BINC`|boost time increment (min)|
+|`CINC`|catch time increment (min)|
+|`RINC`|rise time increment (sec)|
+|`OINC`|off timer increment (hour)|
 |`CATCHSTOP`|stop interval for stir fish catch function (ms)|
-|`PWM0`, `PWN1`|PWM output pins|
+|`PWM0`, `PWM1`|PWM output pins for fan speed|
+|`PWM2`|PWM output pin for LCD brightness control|
 |`I0`, `I1`|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
 |`CLK`, `DT`, `SW`|pins for KY-040 encoder| 
 |`OFF0`, `OFF1`|these pins will be set if the fan is off| 
