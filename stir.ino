@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.5.7";
+String VERSION    = "1.6.0";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -16,6 +16,7 @@ int FANMAX        = 1600;              // fan maximum speed (should be the real 
 
 int BOFF          = 0;                                   // if set boost off will also turn the normal mode off
 
+int BINC          = 1;                                                                 // BTIME increment (min)
 int CINC          = 10;                                                                // CTIME increment (min)
 int RINC          = 10;                                                                // RTIME increment (sec)
 int OINC          = 3;                                                                // OTIME increment (hour)
@@ -24,7 +25,8 @@ long CATCHSTOP    = 20000;                                                      
 
 int PWM0          = 9;                                                                    // PWM pin for 1. fan
 int PWM1          = 10;                                                                   // PWM pin for 2. fan
-                                      
+int PWM2          = 11;                                                           // PWM pin for LCD brightness  
+  
 int I0            = 2;            // interrupt for fan 0 rpm signal (use 2 for Leonardo/ProMicro and 0 for Uno)
 int I1            = 3;            // interrupt for fan 1 rpm signal (use 3 for Leonardo/ProMicro and 1 for Uno)
                                   
@@ -32,6 +34,10 @@ int CLK           = 5;                                                          
 int DT            = 6;                                                                  // dt on KY-040 encoder
 int SW            = 4;                                                                  // sw on KY-040 encoder
 
+int OFF0          = 7;                                                                  // off state pin 1. fan
+int OFF1          = 8;                                                                  // off state pin 2. fan
+int OFFSTATE      = LOW;                                                                // off state (LOW/HIGH)
+                                      
 long RINTERVAL    = 5000;                                                           // regulation interval (ms) 
 long RDELAY       = 3000;                                                   // regulation delay on changes (ms)
 int RTOL          = 8;                                                            // regulation tolerance (rpm)
@@ -39,8 +45,10 @@ int RTOL          = 8;                                                          
 long SINTERVAL    = 2000;                                                         // speed measurement interval 
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
-int SAVETAG       = 1011;                                                                           // save tag 
+int SAVETAG       = 1012;                                                                           // save tag 
 long SAVEDELAY    = 10000;                                                            // EEPROM save delay (ms)
+
+byte LCDB[]       = {4,8,16,24,32,64,96,128,192,255};       // LCD brightness steps (10 values, 0=off, 255=max)
 
 byte aright[]     = {0x00,0x08,0x0C,0x0E,0x0C,0x08,0x00,0x00};                                 // LCD character
 byte aup[]        = {0x04,0x0E,0x1F,0x00,0x00,0x00,0x00,0x00};
@@ -53,6 +61,7 @@ long xts,sts,rts,swts,buts,savets,catts[2],stop[2],bts[2],vts[2],ots[2];        
 int bdelay,bprocess=0,enclast,encval,M=2,S=0;                                      // button/encoder processing
 int F[2],bstate[2]={0},btime[2],cat[2],ctime[2],cstate[2]={0},bclr=0,SAVE=0,LOCK=0;         // operating states
 int ostate[2]={0},otime[2]={0};                                                                    // off timer
+int brght;                                                                                    // LCD brightness
 char form[8],out[20];String cmd[8];int icmd[8];                                                // string buffer
 
 
@@ -60,9 +69,10 @@ void setup() { /////////////////////////////////////////////////////////////////
   Serial.begin(9600);                                                                           // start serial
   
   lcd.init();lcd.clear();lcd.backlight();lcd.createChar(0,aright);lcd.createChar(1,aup);      // initialize lcd
-  pinMode(PWM0,OUTPUT);pinMode(PWM1,OUTPUT);                                                    // set PWM pins
-  pinMode(CLK,INPUT);pinMode(DT,INPUT);pinMode(SW,INPUT);                                    // set KY-040 pins
+  pinMode(PWM0,OUTPUT);pinMode(PWM1,OUTPUT);pinMode(PWM2,OUTPUT);                             // setup PWM pins
+  pinMode(CLK,INPUT);pinMode(DT,INPUT);pinMode(SW,INPUT);                                  // setup KY-040 pins
   digitalWrite(CLK,true);digitalWrite(DT,true);digitalWrite(SW,true);               // turn ON pullup resistors
+  pinMode(OFF0,OUTPUT);pinMode(OFF1,OUTPUT);                                            // setup off state pins
 
   attachInterrupt(I0,rpmint0,FALLING);                                           // setup interrupts vor rpm in
   attachInterrupt(I1,rpmint1,FALLING);
@@ -73,13 +83,17 @@ void setup() { /////////////////////////////////////////////////////////////////
   SAVE=0;                                                                           // load/initialize settings
   if (eer(0)!=SAVETAG) {
     for (int i=0;i<2;i++) {;v[i]=300;b[i]=700;btime[i]=30;cat[i]=0;ctime[i]=120;rtime[i]=60;F[i]=0;}
+    brght=5;
     eew(0,SAVETAG);save();
   } else {
     for (int i=0;i<2;i++) {
       v[i]=eer(1+i);b[i]=eer(3+i);btime[i]=eer(5+i);cat[i]=eer(7+i);
       ctime[i]=eer(9+i);F[i]=eer(11+i);rtime[i]=eer(13+i);
     }
+    brght=eer(15);
   }
+
+  lset();
 
   enclast=digitalRead(CLK);                                                                // get encoder state
 
@@ -193,7 +207,7 @@ void loop() { //////////////////////////////////////////////////////////////////
       save();updatespeed();bdelay=0;
       
     } else if (bdelay>0 && bdelay<20 && !LOCK) {          // short button press, switch: menu -> fan 0 -> fan 1
-      M++;if (M>2) M=0;
+      M++;if (S==7 && M==1) M=2;if (M>2) M=0;
       updatemarker();
       bdelay=0;
     }
@@ -209,24 +223,26 @@ void loop() { //////////////////////////////////////////////////////////////////
       if (digitalRead(DT) != encval) {                                                // turn encoder clockwise
         if (M==2) S++;               // scroll menu
         else {
-          if (S==0) v[M]+=SPEEDINC;  // fan 0 speed up
-          if (S==1) b[M]+=SPEEDINC;  // boost 0 speed up
-          if (S==2) btime[M]++;      // boost time 0 up
-          if (S==3) cat[M]++;        // cat 0 on/off
-          if (S==4) ctime[M]+=CINC;  // cat time 0 up
-          if (S==5) rtime[M]+=RINC;  // rise time 0 up
-          if (S==6) otime[M]+=OINC;  // off time 0 up
+          if (S==0) v[M]+=SPEEDINC;  // fan speed up
+          if (S==1) b[M]+=SPEEDINC;  // boost speed up
+          if (S==2) btime[M]+=BINC;  // boost time up
+          if (S==3) cat[M]++;        // cat on/off
+          if (S==4) ctime[M]+=CINC;  // cat time up
+          if (S==5) rtime[M]+=RINC;  // rise time up
+          if (S==6) otime[M]+=OINC;  // off time up
+          if (S==7) brght++;         // increase LCD brightness
         }
       } else {                                                                 // turn encoder counterclockwise
         if (M==2) S--;               // scroll menu
         else {
-          if (S==0) v[M]-=SPEEDINC;  // fan 0 speed down
-          if (S==1) b[M]-=SPEEDINC;  // boost 0 speed down
-          if (S==2) btime[M]--;      // boost time 0 down
-          if (S==3) cat[M]--;        // cat 0 on/off
-          if (S==4) ctime[M]-=CINC;  // cat time 0 down
-          if (S==5) rtime[M]-=RINC;  // rise time 0 down
-          if (S==6) otime[M]-=OINC;  // off time 0 down
+          if (S==0) v[M]-=SPEEDINC;  // fan speed down
+          if (S==1) b[M]-=SPEEDINC;  // boost speed down
+          if (S==2) btime[M]-=BINC;  // boost time down
+          if (S==3) cat[M]--;        // cat on/off
+          if (S==4) ctime[M]-=CINC;  // cat time down
+          if (S==5) rtime[M]-=RINC;  // rise time down
+          if (S==6) otime[M]-=OINC;  // off time down
+          if (S==7) brght--;         // decrease LCD brightness
         }
       }
       
@@ -234,14 +250,15 @@ void loop() { //////////////////////////////////////////////////////////////////
 
       if (M!=2) {
         if (S<=1) {;updatePWM();rts=MS+RDELAY;}                                   // apply (boost) speed change
-        if (S==2) btime[M]=cut(btime[M],0,60);                                              // check boost time
+        if (S==2) btime[M]=cut(btime[M],0,99);                                              // check boost time
         if (S==3) {;cat[M]=cut(cat[M],0,1);catts[M]=MS;}                                           // check cat
         if (S==4) ctime[M]=cut(ctime[M],60,240);                                              // check cat time
         if (S==5) rtime[M]=cut(rtime[M],0,240);                                              // check rise time
         if (S==6) oset(M,otime[M]);                                                           // check off time
+        if (S==7) lset();                                                                 // set LCD brightness
       }
       
-      if (M==2) S=cut(S,0,6);                                                                // check menu mode
+      if (M==2) S=cut(S,0,7);                                                                // check menu mode
       
       SAVE++;updatelcd();delay(50);
     } 
@@ -252,6 +269,11 @@ void loop() { //////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////// SUPPORT
 
+void lset() { ////////////////////////////////////////////////////////////////////////////// set LCD brightness
+  brght=cut(brght,0,9);
+  analogWrite(PWM2,LCDB[brght]);  
+}
+
 void oset(int n,int t) { ///////////////////////////////////////////////////////////////// set switch off timer
   otime[n]=cut(t,0,99);ots[n]=MS;ostate[n]=otime[n]?1:0;
   SAVE++;
@@ -259,19 +281,21 @@ void oset(int n,int t) { ///////////////////////////////////////////////////////
 
 void fset(int n,int s) { /////////////////////////////////////////////////////////////// set fan state (on/off)
   if (s==1) {
-    rts=MS+RDELAY;F[n]=1;catts[n]=vts[n]=MS;r[n]=0;updatePWM();
+    rts=MS+RDELAY;F[n]=1;catts[n]=vts[n]=MS;r[n]=0;
   } else {
     F[n]=0;bstate[n]=0;
   }
+  updatePWM();
   SAVE++;
 }
 
 void bset(int n,int s) { ///////////////////////////////////////////////////////////// set boost state (on/off)
   if (s==1) {
-    rts=MS+RDELAY;bstate[n]=1;bts[n]=MS;F[n]=1;vts[n]=MS;  
+    rts=MS+RDELAY;bstate[n]=1;bts[n]=MS;F[n]=1;vts[n]=MS; 
   } else {
-    bstate[n]=0;rts=MS+RDELAY;updatePWM();  
+    bstate[n]=0;rts=MS+RDELAY;  
   }
+  updatePWM();
   SAVE++;
 }
 
@@ -288,6 +312,7 @@ void updatelcd() { /////////////////////////////////////////////////////////////
     if (S==5) {;slcd(1,1,5,"RTIME");ilcd(7+i*5,1,-4,int(rtime[i]));}
     if (S==6) {;slcd(1,1,5,"OTIME");ilcd(7+i*5,1,-4,int(otime[i]));}
   }
+  if (S==7) {;slcd(1,1,5,"BRGHT");ilcd(7,1,-4,brght);slcd(7+5,1,-4,"    ");}
 }  
   
 void updatemarker() { ////////////////////////////////////////////////////////////////////// update menu marker
@@ -328,9 +353,17 @@ void calcramp(int i) { /////////////////////////////////////////////////////////
   xv[i]=v[i];xv[i]=cut(((v[i]-FANMIN)/(rtime[i]*1000.0)*(MS-vts[i]))+FANMIN,FANMIN,v[i]);
 }
 
-void setPWM(int n,int v) { ///////////////////////////////////////////////////////////////// set value to OCR1x
-  if (n==0) OCR1A=v;
-  if (n==1) OCR1B=v;
+void setPWM(int n,int v) { /////////////////////////////////////////// set value to OCR1x and states to off pin
+  if (n==0) {
+    OCR1A=v;
+    if (v==0) digitalWrite(OFF0,OFFSTATE?HIGH:LOW);
+    else digitalWrite(OFF0,OFFSTATE?LOW:HIGH);
+  } 
+  if (n==1) {
+    OCR1B=v;
+    if (v==0) digitalWrite(OFF1,OFFSTATE?HIGH:LOW);
+    else digitalWrite(OFF1,OFFSTATE?LOW:HIGH);
+  }
 }
 
 void updatePWM() { ////////////////////////////////////////////////////////////// update PWM output (fan speed)
@@ -356,6 +389,7 @@ void save() { //////////////////////////////////////////////////////////////////
     eew(1+i,v[i]);eew(3+i,b[i]);eew(5+i,btime[i]);eew(7+i,cat[i]);
     eew(9+i,ctime[i]);eew(11+i,F[i]);eew(13+i,rtime[i]);
   }
+  eew(15,brght);
 }
 
 int cutcmd(String data) { ///////////////////////////////////////////////////////////// get saperated substring

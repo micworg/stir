@@ -25,6 +25,8 @@ All functions are controlled by the KY-040 encoder:
   * **CTIME**: turn changes the interval in minutes for the fish catching function
   * **RTIME**: turn changes speed rise time in seconds (applies to power on, stirrer on, boost on and fish catching)
   * **OTIME**: turn changes switch off time in hours (the timer activates immediately, 0 = switch off disabled)
+* **Other menu options**:
+  * **BRGHT**: LCD brightness
 
 ## Display Indicators:
 
@@ -40,10 +42,17 @@ All functions are controlled by the KY-040 encoder:
 |`SPEEDINC`|increment of speed values when turning the encoder|
 |`FANMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
 |`FANMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
+|`BOFF`|if set boost off will also turn the normal mode off|
+|`BINC`|BTIME increment (min)|
+|`CINC`|CTIME increment (min)|
+|`RINC`|RTIME increment (sec)|
+|`OINC`|OTIME increment (hour)|
 |`CATCHSTOP`|stop interval for stir fish catch function (ms)|
 |`PWM0`, `PWN1`|PWM output pins|
 |`I0`, `I1`|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
 |`CLK`, `DT`, `SW`|pins for KY-040 encoder| 
+|`OFF0`, `OFF1`|these pins will be set if the fan is off| 
+|`OFFSTATE`|off state (LOW/HIGH)| 
 |`RINTERVAL`|regulation interval (ms)|
 |`RDELAY`|extra regulation delay when value changes (ms)|
 |`RTOL`|regulation tolerance (rpm)|
@@ -51,6 +60,7 @@ All functions are controlled by the KY-040 encoder:
 |`SAVERAGE`|speed measurement average|
 |`SAVETAG`|parameter save identifier|
 |`SAVEDELAY`|delay in seconds before parameter will be saved to EEPROM|
+|`LCDB`|LCD brightness steps (10 values, 0=off, 255=max)|
 
 ## API commands
 
