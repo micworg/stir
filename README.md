@@ -12,7 +12,7 @@ In order to put the stirrer into operation you have to change the settings in st
 
 ## Reference
 
-This project was created based on an idea from the Hobbybrauer-Forum and would not be possible without the ideas there.
+This project was created based on an idea from the Hobbybrauer-Forum and would not be possible without the ideas from there.
 
 The forum: https://hobbybrauer.de/
 
