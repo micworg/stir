@@ -10,14 +10,13 @@ This is the Arduino sketch to build a double magnetic stirrer based on 2 fans, a
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup.
 
+## Reference
 
 This project was created based on an idea from the Hobbybrauer-Forum and would not be possible without the ideas there.
 
 The forum: https://hobbybrauer.de/
 
 The thread: https://hobbybrauer.de/forum/viewtopic.php?f=21&t=1456
-
-
 
 ## Overview of Functions
 
