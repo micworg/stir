@@ -1,4 +1,4 @@
-# CAD Files
+# Stir Shield
 
 Stir shield for Arduino UNO from Adrian.
 
