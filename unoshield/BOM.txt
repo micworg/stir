@@ -1,0 +1,23 @@
+Power Input:
+
+1x KF301-2P screw terminal => https://de.aliexpress.com/item/20-teile-los-KF301-2P-KF301-5-0-2P-KF301-Schraube-2Pin-5-0mm-Gerade-Pin/32867190033.html?spm=a2g0x.search0104.3.1.2c912b5fntkTJD&ws_ab_test=searchweb0_0%2Csearchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134%2Csearchweb201603_52%2CppcSwitch_0&algo_pvid=18c869a1-9cc5-4b81-88bd-10d4c096c0ee&algo_expid=18c869a1-9cc5-4b81-88bd-10d4c096c0ee-0
+
+Fan:
+
+2x 2,54mm KF2510 3 + 1 P Straight => https://de.aliexpress.com/item/50-teile-los-2-54mm-KF2510-3-1-P-KF2510-4AW-m-nnlich-weibliche-geh-use/32961935772.html?spm=a2g0x.search0104.3.1.5d447ae1Nki8jb&ws_ab_test=searchweb0_0%2Csearchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134%2Csearchweb201603_52%2CppcSwitch_0&algo_pvid=cbe6ff59-92a1-432d-8c5c-8c9c7732600b&algo_expid=cbe6ff59-92a1-432d-8c5c-8c9c7732600b-0
+2x 2.54mm Pin header male => https://de.aliexpress.com/item/10-st-cke-40Pin-2-54mm-Gerade-Einreihige-M-nnlichen-Pin-Header-Stecker-Streifen-PBC-DIY/32878749052.html?spm=a2g0x.search0104.3.85.48754ae7pld96U&ws_ab_test=searchweb0_0%2Csearchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134%2Csearchweb201603_52%2CppcSwitch_0&algo_pvid=6d1373ff-487b-4174-b289-f2b8f8d6dcd0&algo_expid=6d1373ff-487b-4174-b289-f2b8f8d6dcd0-12
+
+Reset:
+
+1x Micro pressure switch => https://de.aliexpress.com/item/100-teile-los-Mini-Micro-Momentary-Taktile-Druckschalter-6-6-5mm-4-pin-ON-OFF-tasten/32858344336.html?spm=a2g0x.search0104.3.43.3aa022bdWBlQ8n&ws_ab_test=searchweb0_0%2Csearchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134%2Csearchweb201603_52%2CppcSwitch_0&algo_pvid=2cb51b61-71a9-4cec-b3bf-494134fa318e&algo_expid=2cb51b61-71a9-4cec-b3bf-494134fa318e-6
+
+Output's:
+
+2x XH2.54 square male 5P => https://de.aliexpress.com/item/50PCS-Lot-XH2-54-Right-Angle-Pin-Header-Connector-2P-3P-4P-5P-6P-7P-8P/32822859426.html?spm=a2g0x.search0104.3.8.d58e3f185YK9t8&ws_ab_test=searchweb0_0,searchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134,searchweb201603_52,ppcSwitch_0&algo_expid=9f565a80-ffcb-40ff-a45a-78ad388fbc3b-1&algo_pvid=9f565a80-ffcb-40ff-a45a-78ad388fbc3b
+2x XH2.54 female 5P => https://de.aliexpress.com/item/10PCS-XH2-54-2P-3P-3P-4P-5P-6P-7P-8P-9P-10P-11P-12P-Pitch/32771742483.html?spm=a2g0x.search0104.3.304.643773f2xd0Fnr&ws_ab_test=searchweb0_0,searchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134,searchweb201603_52,ppcSwitch_0&algo_expid=ff250363-7f23-4460-b86f-a25e39925240-43&algo_pvid=ff250363-7f23-4460-b86f-a25e39925240
+
+Resistors:
+
+4x 10 kOhm SMD or THT Resistors => 
+https://de.aliexpress.com/item/100-st-cke-0805-5-1-8-watt-SMD-chip-widerstand-0R-10-mt-0-1R/32865947306.html?spm=a2g0x.search0104.3.2.3e337801L8ie9i&ws_ab_test=searchweb0_0%2Csearchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134%2Csearchweb201603_52%2CppcSwitch_0&algo_pvid=771d229c-6332-4f9b-86f8-d9c456937ff3&algo_expid=771d229c-6332-4f9b-86f8-d9c456937ff3-0
+https://de.aliexpress.com/item/100-st-cke-1-4-watt-Metall-Film-Widerstand-0-25-watt-1-0-2-2/32952777282.html?spm=a2g0x.search0104.3.16.5e9c112fwd3FS3&ws_ab_test=searchweb0_0%2Csearchweb201602_10_10065_10068_319_10059_10884_317_10887_10696_321_322_10084_453_10083_454_10103_10618_10307_537_536_10134%2Csearchweb201603_52%2CppcSwitch_0&algo_pvid=9573d819-3d0b-4108-9ac4-c8d4065f59a4&algo_expid=9573d819-3d0b-4108-9ac4-c8d4065f59a4-2
