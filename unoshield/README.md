@@ -1,6 +1,6 @@
 # Stir Shield
 
-Stir shield for Arduino UNO from Adrian.
+Stir shield for Arduino UNO from Adrian Sigel.
 
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/unoshield/images/pcb_top.png" width=500>
