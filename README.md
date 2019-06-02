@@ -33,6 +33,7 @@ All functions are controlled by the KY-040 encoder:
   * **CTIME**: turn changes the interval in minutes for the fish catching function
   * **RTIME**: turn changes speed rise time in seconds (applies to power on, stirrer on, boost on and fish catching)
   * **OTIME**: turn changes switch off time in hours (the timer activates immediately, 0 = switch off disabled)
+  * **RNVAL**: random value range (a random values in this range will be added to speed) 
 * **Other menu options**:
   * **BRGHT**: LCD brightness
 
@@ -65,6 +66,7 @@ All functions are controlled by the KY-040 encoder:
 |`RINTERVAL`|regulation interval (ms)|
 |`RDELAY`|extra regulation delay when value changes (ms)|
 |`RTOL`|regulation tolerance (rpm)|
+|`RNDINTERVL`|randon value change interval (ms)|
 |`SINTERVAL`|speed measurement interval (ms)|
 |`SAVERAGE`|speed measurement average|
 |`SAVETAG`|parameter save identifier|
@@ -90,6 +92,7 @@ Commands are colon separated an can be send via USB/Serial
 |`coff:<0/1>`|switch catch mode off|
 |`ctime:<0/1>:<min>`|set catch mode interval (60-240 min)|
 |`rtime:<0/1>:<sec>`|set speed rise time (0-240 sec)|
+|`rnval:<0/1>:<rpm>`|randon value (0-1000 rpm)|
 |`otime:<0/1>:<hour>`|switch stirrer off after time in hours (1-99 hour, 0 deactivates switch off)|
 
 All commands return a colon separated string with all current parameters:
@@ -108,6 +111,7 @@ All commands return a colon separated string with all current parameters:
 | 9|0|`ctime[0]` |fish catch time interval (min)|
 |10|0|`rtime[0]` |speed rise time (sec)|
 |11|0|`otime[0]` |switch off time (hour)|
+|11|0|`rnval[0]` |random value (rpm)|
 |12|0|           |boost remain (sec)|
 |13|0|           |off timer remain (sec)|
 |14|1|`F[1]`     |state (0=on, 1=off)|
@@ -122,6 +126,7 @@ All commands return a colon separated string with all current parameters:
 |23|1|`ctime[1]` |fish catch time interval (min)|
 |24|1|`rtime[1]` |speed rise time (sec)|
 |25|1|`otime[1]` |switch off time (hour)|
+|25|1|`rnval[1]` |random value (rpm)|
 |26|1|           |boost remain (sec)|
 |27|1|           |off timer remain (sec)|
 |28| |           |0=ok, 1=error|
