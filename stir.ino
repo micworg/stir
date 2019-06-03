@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.7.0";
+String VERSION    = "1.7.1";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -42,9 +42,9 @@ long RINTERVAL    = 5000;                                                       
 long RDELAY       = 3000;                                                   // regulation delay on changes (ms)
 int RTOL          = 8;                                                            // regulation tolerance (rpm)
 
-long RNDINTERVL   = 300000;                                                     // randon value change interval
+long RNDINTERVAL  = 300000;                                          // randon value range change interval (ms)
 
-long SINTERVAL    = 2000;                                                        // speed measurement internval 
+long SINTERVAL    = 2000;                                                   // speed measurement internval (ms) 
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
 int SAVETAG       = 1014;                                                                           // save tag 
@@ -55,7 +55,6 @@ byte LCDB[]       = {4,8,16,24,32,64,96,128,192,255};       // LCD brightness st
 byte aright[]     = {0x00,0x08,0x0C,0x0E,0x0C,0x08,0x00,0x00};                                 // LCD character
 byte aup[]        = {0x04,0x0E,0x1F,0x00,0x00,0x00,0x00,0x00};
 byte arnd[]       = {0x0E,0x0E,0x0E,0x00,0x00,0x00,0x00,0x00};
-
 
 LiquidCrystal_I2C lcd(0x27,16,2);                                           // LCD display (connect to SDA/SCL)
 
@@ -136,13 +135,27 @@ void loop() { //////////////////////////////////////////////////////////////////
     
     updatelcd();
     for (int i=0;i<2;i++) {
-      SX(F[i]);SX(":");SX((int)(v[i]));SX(":");SX((int)(b[i]));SX(":");SX(rpm[i]);SX(":"); 
-      SX(xpm[i]);SX(":");SX(r[i]);SX(":");SX(bstate[i]);SX(":");SX(btime[i]);SX(":"); 
-      SX(cat[i]);SX(":");SX(ctime[i]);SX(":");SX(rtime[i]);SX(":");SX(otime[i]);SX(":");SX(rnval[i]);SX(":");
-      if (bstate[i]) SX((((long)btime[i]*60000)-(MS-(long)bts[i]))/1000+1); else SX(0);SX(":");
-      if (ostate[i]) SX((((long)otime[i]*3600000)-(MS-(long)ots[i]))/1000+1); else SX(0);SX(":");
+      SX(F[i]);SX(":");        // 0, 16  
+      SX((int)(v[i]));SX(":"); // 1, 17
+      SX((int)(b[i]));SX(":"); // 2, 18
+      SX(rpm[i]);SX(":");      // 3, 19
+      SX(xpm[i]);SX(":");      // 4, 20
+      SX(r[i]);SX(":");        // 5, 21
+      SX(bstate[i]);SX(":");   // 6, 22
+      SX(btime[i]);SX(":");    // 7, 23
+      SX(cat[i]);SX(":");      // 8, 24
+      SX(ctime[i]);SX(":");    // 9, 25
+      SX(rtime[i]);SX(":");    // 10, 26
+      SX(otime[i]);SX(":");    // 11, 27
+      SX(rnval[i]);SX(":");    // 12, 28
+      SX(rnd[i]);SX(":");      // 13, 29
+      if (bstate[i]) SX((((long)btime[i]*60000)-(MS-(long)bts[i]))/1000+1); else SX(0);SX(":");   // 14, 30
+      if (ostate[i]) SX((((long)otime[i]*3600000)-(MS-(long)ots[i]))/1000+1); else SX(0);SX(":"); // 15, 31
     }
-    SX(VERSION);SX(":");SXN(err);
+    SX(VERSION);SX(":"); // 32
+    SX(MS);SX(":");      // 33
+    SXN(err);            // 34
+    save();
   }
 
   if (SAVE>0 && MS-savets>SAVEDELAY) {;save();SAVE=0;savets=MS;} ////////////////////// save settings if needed
@@ -150,7 +163,7 @@ void loop() { //////////////////////////////////////////////////////////////////
   
   for (int i=0;i<2;i++) {
 
-    if (MS-rndts[i]>RNDINTERVL) { //////////////////////////////////////////////////////////////// random timer
+    if (MS-rndts[i]>RNDINTERVAL) { /////////////////////////////////////////////////////////////// random timer
       rnd[i]=int(random(0,rnval[i]+1)/10)*10;rndts[i]=MS;updatelcd();
     }
 
