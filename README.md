@@ -131,8 +131,9 @@ All commands return a colon separated string with all current parameters:
 |29|1|`rnd[1]`   |current random value (rpm)|
 |30|1|           |boost remain (sec)|
 |31|1|           |off timer remain (sec)|
-|32| |           |0=ok, 1=error|
-|33| |           |software version|
+|32| |           |software version|
+|33| |           |uptime (ms)|
+|34| |           |0=ok, 1=error|
 
 ## Schematics
 
