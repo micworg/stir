@@ -66,7 +66,7 @@ All functions are controlled by the KY-040 encoder:
 |`RINTERVAL`|regulation interval (ms)|
 |`RDELAY`|extra regulation delay when value changes (ms)|
 |`RTOL`|regulation tolerance (rpm)|
-|`RNDINTERVL`|randon value change interval (ms)|
+|`RNDINTERVL`|randon value range change interval (ms)|
 |`SINTERVAL`|speed measurement interval (ms)|
 |`SAVERAGE`|speed measurement average|
 |`SAVETAG`|parameter save identifier|
@@ -92,7 +92,7 @@ Commands are colon separated an can be send via USB/Serial
 |`coff:<0/1>`|switch catch mode off|
 |`ctime:<0/1>:<min>`|set catch mode interval (60-240 min)|
 |`rtime:<0/1>:<sec>`|set speed rise time (0-240 sec)|
-|`rnval:<0/1>:<rpm>`|randon value (0-1000 rpm)|
+|`rnval:<0/1>:<rpm>`|set randon value range (0-1000 rpm)|
 |`otime:<0/1>:<hour>`|switch stirrer off after time in hours (1-99 hour, 0 deactivates switch off)|
 
 All commands return a colon separated string with all current parameters:
