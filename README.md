@@ -111,26 +111,28 @@ All commands return a colon separated string with all current parameters:
 | 9|0|`ctime[0]` |fish catch time interval (min)|
 |10|0|`rtime[0]` |speed rise time (sec)|
 |11|0|`otime[0]` |switch off time (hour)|
-|11|0|`rnval[0]` |random value (rpm)|
-|12|0|           |boost remain (sec)|
-|13|0|           |off timer remain (sec)|
-|14|1|`F[1]`     |state (0=on, 1=off)|
-|15|1|`v[1]`     |speed (rpm)|
-|16|1|`b[1]`     |boost speed (rpm)|
-|17|1|`rpm[1]`   |rpm|
-|18|1|`xpm[1]`   |averaged rpm|
-|19|1|`r[1]`     |regulation value|
-|20|1|`bstate[1]`|boost state (0=on, 1=off)|
-|21|1|`btime[1]` |boost time (min)|
-|22|1|`cat[1]`   |fish catch mode state (0=on, 1=off)|
-|23|1|`ctime[1]` |fish catch time interval (min)|
-|24|1|`rtime[1]` |speed rise time (sec)|
-|25|1|`otime[1]` |switch off time (hour)|
-|25|1|`rnval[1]` |random value (rpm)|
-|26|1|           |boost remain (sec)|
-|27|1|           |off timer remain (sec)|
-|28| |           |0=ok, 1=error|
-|29| |           |software version|
+|12|0|`rnval[0]` |random value range (rpm)|
+|13|0|`rnd[0]`   |current random value (rpm)|
+|14|0|           |boost remain (sec)|
+|15|0|           |off timer remain (sec)|
+|16|1|`F[1]`     |state (0=on, 1=off)|
+|17|1|`v[1]`     |speed (rpm)|
+|18|1|`b[1]`     |boost speed (rpm)|
+|19|1|`rpm[1]`   |rpm|
+|20|1|`xpm[1]`   |averaged rpm|
+|21|1|`r[1]`     |regulation value|
+|22|1|`bstate[1]`|boost state (0=on, 1=off)|
+|23|1|`btime[1]` |boost time (min)|
+|24|1|`cat[1]`   |fish catch mode state (0=on, 1=off)|
+|25|1|`ctime[1]` |fish catch time interval (min)|
+|26|1|`rtime[1]` |speed rise time (sec)|
+|27|1|`otime[1]` |switch off time (hour)|
+|28|1|`rnval[1]` |random value range (rpm)|
+|29|1|`rnd[1]`   |current random value (rpm)|
+|30|1|           |boost remain (sec)|
+|31|1|           |off timer remain (sec)|
+|32| |           |0=ok, 1=error|
+|33| |           |software version|
 
 ## Schematics
 
