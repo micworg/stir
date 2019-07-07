@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.7.1";
+String VERSION    = "1.7.2";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
@@ -208,7 +208,7 @@ void loop() { //////////////////////////////////////////////////////////////////
   bdelay=0; //////////////////////////////////////////////////////////////////////////////////// process switch
   if (!bprocess) {
     while (!digitalRead(SW)){
-      bdelay++;delay(25);bprocess=1;if (bdelay>20) break;
+      bdelay++;delay(15);bprocess=1;if (bdelay>20) break;
     }
   }
   
@@ -288,7 +288,7 @@ void loop() { //////////////////////////////////////////////////////////////////
       
       if (M==2) S=cut(S,0,8);                                                                // check menu mode
       
-      SAVE++;updatelcd();delay(50);
+      SAVE++;updatelcd();delay(25);
     } 
   }
   enclast=encval;
