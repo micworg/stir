@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is the Arduino sketch to build a double magnetic stirrer based on 2 fans, a 1602 LCD display, a KY-040 encoder and an Arduino (e.g. Uno, Leonardo, Pro Micro).
+This is the Arduino sketch to build a double magnetic stirrer based on 2 fans, a 1602 LCD display, a KY-040 encoder and an Arduino (e.g. Uno, Nano, Leonardo, Pro Micro).
 
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/images/stir.jpg" width=500>
