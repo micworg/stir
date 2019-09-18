@@ -2,16 +2,16 @@
 
 Stir shields for Arduino NANO from Jens Warkentin.
 
-### Gerber_Stir_Arduino_Nano.zip
 
 <p align="center">
+### Gerber_Stir_Arduino_Nano.zip
 <img src="https://github.com/micworg/stir/blob/master/nanoshield/images/top.png" width=200>
 <img src="https://github.com/micworg/stir/blob/master/nanoshield/images/bottom.png" width=200>
 </p>
 
-### Gerber_Stir.Nano+StepDown.V3_.zip
 
 <p align="center">
+### Gerber_Stir.Nano+StepDown.V3_.zip
 <img src="https://github.com/micworg/stir/blob/master/nanoshield/images/topv3.png" width=200>
 <img src="https://github.com/micworg/stir/blob/master/nanoshield/images/bottomv3.png" width=200>
 </p>
