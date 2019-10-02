@@ -7,7 +7,7 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "1.7.2";
+String VERSION    = "1.7.3";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
