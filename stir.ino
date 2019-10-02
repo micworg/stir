@@ -381,8 +381,11 @@ void slcd(int x,int y, int l,String s) { ///////////////////////////////////////
 }
 
 void calcramp(int i) { ///////////////////////////////////////////////////////////// calculate speed ramp value
-  xb[i]=b[i];if (bstate[i]) xb[i]=cut(((b[i]-v[i])/(rtime[i]*1000.0)*(MS-bts[i]))+v[i],v[i],b[i]);
-  xv[i]=v[i];xv[i]=cut(((v[i]-FANMIN)/(rtime[i]*1000.0)*(MS-vts[i]))+FANMIN,FANMIN,v[i]);
+  xb[i]=b[i];
+  int rt=rtime[i]?rtime[i]:1;
+  if (bstate[i]) xb[i]=cut(((b[i]-v[i])/(rt*1000.0)*(MS-bts[i]))+v[i],v[i],b[i]);
+  xv[i]=v[i];
+  xv[i]=cut(((v[i]-FANMIN)/(rt*1000.0)*(MS-vts[i]))+FANMIN,FANMIN,v[i]);
   if (rnval[i]>0 && xv[i]>=v[i]) xv[i]=cut(xv[i]+rnd[i],FANMIN,FANMAX);  
 }
 
