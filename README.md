@@ -10,7 +10,7 @@ V2 supports dual voltage for the fans which increases the speed range.
 <img src="https://github.com/micworg/stir/blob/master/images/stir+pcb.jpg" width=700>
 </p>
 
-In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup.
+In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup (see below).
 
 
 ## Part List
