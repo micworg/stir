@@ -1,4 +1,4 @@
-# Dual magnetic stir controller
+# Dual magnetic stir controller V2
 
 ## Overview
 
