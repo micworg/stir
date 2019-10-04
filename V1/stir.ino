@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////// Stir Control V2 (mwx'2019)
+/////////////////////////////////////////////////////////////////////////////////////// Stir Control (mwx'2019)
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -7,12 +7,12 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "2.0.1";
+String VERSION    = "1.7.3";
 
 int SPEEDINC      = 50;                                                                // speed increment (rpm)
 
 int FANMIN        = 200;            // fan minimum speed (should be a value at which the fan runs safely) (rpm)
-int FANMAX        = 2500;              // fan maximum speed (should be the real maximum value of the fan) (rpm)
+int FANMAX        = 1600;              // fan maximum speed (should be the real maximum value of the fan) (rpm)
 
 int BOFF          = 0;                                   // if set boost off will also turn the normal mode off
 
@@ -27,16 +27,16 @@ int PWM0          = 9;                                                          
 int PWM1          = 10;                                                                   // PWM pin for 2. fan
 int PWM2          = 11;                                                           // PWM pin for LCD brightness  
   
-int I0            = 0;            // interrupt for fan 0 rpm signal (use 2 for Leonardo/ProMicro and 0 for Uno)
-int I1            = 1;            // interrupt for fan 1 rpm signal (use 3 for Leonardo/ProMicro and 1 for Uno)
+int I0            = 2;            // interrupt for fan 0 rpm signal (use 2 for Leonardo/ProMicro and 0 for Uno)
+int I1            = 3;            // interrupt for fan 1 rpm signal (use 3 for Leonardo/ProMicro and 1 for Uno)
                                   
 int CLK           = 5;                                                                 // clk on KY-040 encoder
 int DT            = 6;                                                                  // dt on KY-040 encoder
 int SW            = 4;                                                                  // sw on KY-040 encoder
 
-int R0            = 7;                                                               // voltage select relais 0
-int R1            = 8;                                                               // voltage select relais 1
-int RTHRES        = 700;                                                      // voltage switch threshold (rpm)
+int OFF0          = 7;                                                                  // off state pin 1. fan
+int OFF1          = 8;                                                                  // off state pin 2. fan
+int OFFSTATE      = LOW;                                                                // off state (LOW/HIGH)
                                       
 long RINTERVAL    = 5000;                                                          // regulation internval (ms) 
 long RDELAY       = 3000;                                                   // regulation delay on changes (ms)
@@ -47,7 +47,7 @@ long RNDINTERVAL  = 300000;                                          // randon v
 long SINTERVAL    = 2000;                                                   // speed measurement internval (ms) 
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
-int SAVETAG       = 2001;                                                                           // save tag 
+int SAVETAG       = 1014;                                                                           // save tag 
 long SAVEDELAY    = 10000;                                                            // EEPROM save delay (ms)
 
 byte LCDB[]       = {4,8,16,24,32,64,96,128,192,255};       // LCD brightness steps (10 values, 0=off, 255=max)
@@ -66,7 +66,7 @@ int F[2],bstate[2]={0},btime[2],cat[2],ctime[2],cstate[2]={0},bclr=0,SAVE=0,LOCK
 int ostate[2]={0},otime[2]={0};                                                                    // off timer
 int brght;                                                                                    // LCD brightness
 int rnd[2]={0},rnval[2]={0};long seed;                                                          // random speed
-char form[8],out[20];                                                                          // string buffer
+char form[8],out[20];String cmd[8];int icmd[8];                                                // string buffer
 
 
 void setup() { ////////////////////////////////////////////////////////////////////////////////////////// SETUP  
@@ -77,7 +77,7 @@ void setup() { /////////////////////////////////////////////////////////////////
   pinMode(PWM0,OUTPUT);pinMode(PWM1,OUTPUT);pinMode(PWM2,OUTPUT);                             // setup PWM pins
   pinMode(CLK,INPUT);pinMode(DT,INPUT);pinMode(SW,INPUT);                                  // setup KY-040 pins
   digitalWrite(CLK,true);digitalWrite(DT,true);digitalWrite(SW,true);               // turn ON pullup resistors
-  pinMode(R0,OUTPUT);pinMode(R1,OUTPUT);                                    // setup voltage selcet relais pins
+  pinMode(OFF0,OUTPUT);pinMode(OFF1,OUTPUT);                                            // setup off state pins
 
   attachInterrupt(I0,rpmint0,FALLING);                                           // setup interrupts vor rpm in
   attachInterrupt(I1,rpmint1,FALLING);
@@ -111,6 +111,52 @@ void setup() { /////////////////////////////////////////////////////////////////
 
 
 void loop() { //////////////////////////////////////////////////////////////////////////////////////////// LOOP
+
+  if (Serial.available() > 0) { ////////////////////////////////////////////////////////// serial communication
+    int n=cutcmd(Serial.readString());
+    int err=1;
+    int i=cut(icmd[1],0,1);
+    if (cmd[0]=="info"    && n==1) {;err=0;}
+    if (cmd[0]=="version" && n==1) {;SXN(VERSION);return;}
+    if (cmd[0]=="save"    && n==1) {;save();}
+    if (cmd[0]=="speed"   && n==3) {;v[i]=cut(icmd[2],FANMIN,FANMAX);err=0;}
+    if (cmd[0]=="bspeed"  && n==3) {;b[i]=cut(icmd[2],FANMIN,FANMAX);err=0;}
+    if (cmd[0]=="btime"   && n==3) {;btime[i]=cut(icmd[2],0,60);err=0;}
+    if (cmd[0]=="ctime"   && n==3) {;ctime[i]=cut(icmd[2],60,240);err=0;}
+    if (cmd[0]=="rtime"   && n==3) {;rtime[i]=cut(icmd[2],0,240);err=0;}
+    if (cmd[0]=="rnval"   && n==3) {;rnval[i]=cut(icmd[2],0,1000);err=0;}
+    if (cmd[0]=="on"      && n==2) {;fset(i,1);err=0;}
+    if (cmd[0]=="off"     && n==2) {;fset(i,0);err=0;}
+    if (cmd[0]=="bon"     && n==2) {;bset(i,1);err=0;}
+    if (cmd[0]=="boff"    && n==2) {;bset(i,0);err=0;}
+    if (cmd[0]=="con"     && n==2) {;cat[i]=1;catts[i]=MS;err=0;}
+    if (cmd[0]=="coff"    && n==2) {;cat[i]=0;catts[i]=MS;err=0;}
+    if (cmd[0]=="otime"   && n==3) {;oset(i,icmd[2]);err=0;}
+    
+    updatelcd();
+    for (int i=0;i<2;i++) {
+      SX(F[i]);SX(":");        // 0, 16  
+      SX((int)(v[i]));SX(":"); // 1, 17
+      SX((int)(b[i]));SX(":"); // 2, 18
+      SX(rpm[i]);SX(":");      // 3, 19
+      SX(xpm[i]);SX(":");      // 4, 20
+      SX(r[i]);SX(":");        // 5, 21
+      SX(bstate[i]);SX(":");   // 6, 22
+      SX(btime[i]);SX(":");    // 7, 23
+      SX(cat[i]);SX(":");      // 8, 24
+      SX(ctime[i]);SX(":");    // 9, 25
+      SX(rtime[i]);SX(":");    // 10, 26
+      SX(otime[i]);SX(":");    // 11, 27
+      SX(rnval[i]);SX(":");    // 12, 28
+      SX(rnd[i]);SX(":");      // 13, 29
+      if (bstate[i]) SX((((long)btime[i]*60000)-(MS-(long)bts[i]))/1000+1); else SX(0);SX(":");   // 14, 30
+      if (ostate[i]) SX((((long)otime[i]*3600000)-(MS-(long)ots[i]))/1000+1); else SX(0);SX(":"); // 15, 31
+    }
+    SX(VERSION);SX(":"); // 32
+    SX(MS);SX(":");      // 33
+    SXN(err);            // 34
+    save();
+  }
 
   if (SAVE>0 && MS-savets>SAVEDELAY) {;save();SAVE=0;savets=MS;} ////////////////////// save settings if needed
   if (MS-savets>SAVEDELAY/5) bclr=1;
@@ -344,8 +390,16 @@ void calcramp(int i) { /////////////////////////////////////////////////////////
 }
 
 void setPWM(int n,int v) { /////////////////////////////////////////// set value to OCR1x and states to off pin
-  if (n==0) OCR1A=v;
-  if (n==1) OCR1B=v;
+  if (n==0) {
+    OCR1A=v;
+    if (v==0) digitalWrite(OFF0,OFFSTATE?HIGH:LOW);
+    else digitalWrite(OFF0,OFFSTATE?LOW:HIGH);
+  } 
+  if (n==1) {
+    OCR1B=v;
+    if (v==0) digitalWrite(OFF1,OFFSTATE?HIGH:LOW);
+    else digitalWrite(OFF1,OFFSTATE?LOW:HIGH);
+  }
 }
 
 void updatePWM() { ////////////////////////////////////////////////////////////// update PWM output (fan speed)
@@ -353,14 +407,8 @@ void updatePWM() { /////////////////////////////////////////////////////////////
     v[i]=cut(v[i],FANMIN,FANMAX);
     b[i]=cut(b[i],FANMIN,FANMAX);
     calcramp(i);
-    if (!F[i]) setPWM(i,0); else setPWM(i,cut((bstate[i]?xb[i]:xv[i])/(FANMAX/320.0)+r[i],1,320));
+    if (!F[i]) setPWM(i,0); else setPWM(i,cut((bstate[i]?xb[i]:xv[i])/(FANMAX/320.0)+r[i],0,320));
   }
-  
-  if (v[0]>=RTHRES) digitalWrite(R0,LOW);
-  else digitalWrite(R0,HIGH);
-  
-  if (v[1]>=RTHRES) digitalWrite(R1,LOW);
-  else digitalWrite(R1,HIGH);
 } 
 
 void rpmint0() {;ac[0]++;bc[0]++;} ///////////////////////////////////////////////////////////// rpm interrupts
@@ -379,6 +427,15 @@ void save() { //////////////////////////////////////////////////////////////////
   }
   eew(100,seed);
   eew(101,brght);
+}
+
+int cutcmd(String data) { ///////////////////////////////////////////////////////////// get saperated substring
+  int mi=data.length(),n=0,j=0;
+  for (int i=0;i<=mi;i++) {
+    if (data.charAt(i) == ':' || i == mi) {;cmd[n]=data.substring(j,i);j=i+1;n++;}
+  }
+  for (int i=1;i<n;i++) icmd[i]=cmd[i].toInt();
+  return n;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////// END
