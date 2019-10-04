@@ -15,22 +15,22 @@ In order to put the stirrer into operation you have to change the settings in st
 
 ## Part List
 
-1x PCB "Stir V2.0"
-1x Arduino Nano V3
-1x Voltage Regulator TE818 5-24V to 5V 3A Step Down Buck Converter
-2x Relais Omron G5Q-1-EU 5DC Printrelais 5 V/DC 5A 
-2x Diode 1N4148 Diotec
-1x Elko 1000µF/16V Yageo SE016M1000B5S-1015
-2x Diode 1N5822 STMicroelectronics Schottky-Diode
-4x Metallschicht-Widerstand 10 KOhm 0,6W
-2x Lüfter BeQuiet SilentWings 3 120mm PWM Highspeed 
-(oder bisher UNGETESTET Noctua NF-R8 Redux-1800 80mm PWM)
-1x Steckernetzteil 12V-20V DC / 2A
-1x Einbaubuchse für Steckernetzteil
-1x I2C 16x2 Arduino LCD Display Module
-1x Dreh-Encoder KY-040 (mit Mutter und Drehknauf)
-2x Magnethalterung (3D Druck)
-4x Neodymmagnet 20x10 mm (N52, 1 oder 2 mm dick)
+* 1x PCB "Stir V2.0"
+* 1x Arduino Nano V3
+* 1x Voltage Regulator TE818 5-24V to 5V 3A Step Down Buck Converter
+* 2x Relais Omron G5Q-1-EU 5DC Printrelais 5 V/DC 5A 
+* 2x Diode 1N4148 Diotec
+* 1x Elko 1000µF/16V Yageo SE016M1000B5S-1015
+* 2x Diode 1N5822 STMicroelectronics Schottky-Diode
+* 4x Metallschicht-Widerstand 10 KOhm 0,6W
+* 2x Lüfter BeQuiet SilentWings 3 120mm PWM Highspeed 
+* (oder bisher UNGETESTET Noctua NF-R8 Redux-1800 80mm PWM)
+* 1x Steckernetzteil 12V-20V DC / 2A
+* 1x Einbaubuchse für Steckernetzteil
+* 1x I2C 16x2 Arduino LCD Display Module
+* 1x Dreh-Encoder KY-040 (mit Mutter und Drehknauf)
+* 2x Magnethalterung (3D Druck)
+* 4x Neodymmagnet 20x10 mm (N52, 1 oder 2 mm dick)
 
 
 ## Reference
