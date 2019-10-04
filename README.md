@@ -32,6 +32,7 @@ The stir V2 software is compatible with V1 hardware if you have used neither the
 * 2x Magnmet mount (3D printed)
 * 4x Neodymium magnet 20x10 mm (N52, 1 oder 2 mm dick)
 
+In addition, a housing is required that can be individually designed according to possibilities and capabilities.
 
 ## Reference
 
