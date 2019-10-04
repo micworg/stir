@@ -7,7 +7,7 @@ This is the Arduino project to build a double magnetic stirrer based on 2 fans, 
 V2 supports dual voltage for the fans which increases the speed range.
 
 <p align="center">
-<img src="https://github.com/micworg/stir2/blob/master/images/stir+pcb.jpg" width=700>
+<img src="https://github.com/micworg/stir/blob/master/images/stir+pcb.jpg" width=700>
 </p>
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup.
