@@ -2,21 +2,53 @@
 
 ## Overview
 
-This is the Arduino sketch to build a double magnetic stirrer based on 2 fans, a 1602 LCD display, a KY-040 encoder and an Arduino (e.g. Uno, Nano, Leonardo, Pro Micro).
+This is the Arduino project to build a double magnetic stirrer based on 2 fans, a 1602 LCD display, a KY-040 encoder and an Arduino Nano and a special PCB designed in the Hobbybrauer-Forum.
+
+V2 supports dual voltage for the fans which increases the speed range.
 
 <p align="center">
-<img src="https://github.com/micworg/stir/blob/master/images/stir.jpg" width=500>
+<img src="https://github.com/micworg/stir2/blob/master/images/stir+pcb.jpg" width=700>
 </p>
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup.
 
+
+## Part List
+
+1x PCB "Stir V2.0"
+1x Arduino Nano V3
+1x Voltage Regulator TE818 5-24V to 5V 3A Step Down Buck Converter
+2x Relais Omron G5Q-1-EU 5DC Printrelais 5 V/DC 5A 
+2x Diode 1N4148 Diotec
+1x Elko 1000µF/16V Yageo SE016M1000B5S-1015
+2x Diode 1N5822 STMicroelectronics Schottky-Diode
+4x Metallschicht-Widerstand 10 KOhm 0,6W
+2x Lüfter BeQuiet SilentWings 3 120mm PWM Highspeed 
+(oder bisher UNGETESTET Noctua NF-R8 Redux-1800 80mm PWM)
+1x Steckernetzteil 12V-20V DC / 2A
+1x Einbaubuchse für Steckernetzteil
+1x I2C 16x2 Arduino LCD Display Module
+1x Dreh-Encoder KY-040 (mit Mutter und Drehknauf)
+2x Magnethalterung (3D Druck)
+4x Neodymmagnet 20x10 mm (N52, 1 oder 2 mm dick)
+
+
 ## Reference
 
-This project was created based on an idea from the Hobbybrauer-Forum and would not be possible without the ideas from there.
+This project was created based on an idea from the german Hobbybrauer-Forum and would not be possible without the ideas from there.
 
 The forum: https://hobbybrauer.de/
 
 The thread: https://hobbybrauer.de/forum/viewtopic.php?f=21&t=1456
+
+Special thanks for development and testing:
+
+* Herbert Schmid 
+* Adrian Sigel
+* Jens Warkentin
+* Bastian Werner
+
+Successor project of: https://github.com/micworg/stir
 
 ## Overview of Functions
 
@@ -61,8 +93,8 @@ All functions are controlled by the KY-040 encoder:
 |`PWM2`|PWM output pin for LCD brightness control|
 |`I0`, `I1`|interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
 |`CLK`, `DT`, `SW`|pins for KY-040 encoder| 
-|`OFF0`, `OFF1`|these pins will be set if the fan is off| 
-|`OFFSTATE`|off state (LOW/HIGH)| 
+|`R0`, `R0`|voltage select relais pin| 
+|`RTHRES`|voltage switch threshold (rpm)| 
 |`RINTERVAL`|regulation interval (ms)|
 |`RDELAY`|extra regulation delay when value changes (ms)|
 |`RTOL`|regulation tolerance (rpm)|
@@ -73,71 +105,3 @@ All functions are controlled by the KY-040 encoder:
 |`SAVEDELAY`|delay in seconds before parameter will be saved to EEPROM|
 |`LCDB`|LCD brightness steps (10 values, 0=off, 255=max)|
 
-## API commands
-
-Commands are colon separated an can be send via USB/Serial
-
-|Command|Description|
-|:------|:----------|
-|`info`|returns a colon separated string with all parameters (see below)|
-|`version`|returns the software version|
-|`on:<0/1>`|switch stirren on|
-|`off:<0/1>`|switch stirren off|
-|`bon:<0/1>`|switch boost mode on|
-|`boff:<0/1>`|switch boost mode off|
-|`speed:<0/1>:<rpm>`|set stirrer speed (FANMIN-FANMAX rpm)|
-|`bspeed:<0/1>:<rpm>`|set stirrer boost speed (speed-FANMAX rpm)|
-|`btime:<0/1>:<min>`|set boost time (0-60)|
-|`con:<0/1>`|switch catch mode on|
-|`coff:<0/1>`|switch catch mode off|
-|`ctime:<0/1>:<min>`|set catch mode interval (60-240 min)|
-|`rtime:<0/1>:<sec>`|set speed rise time (0-240 sec)|
-|`rnval:<0/1>:<rpm>`|set randon value range (0-1000 rpm)|
-|`otime:<0/1>:<hour>`|switch stirrer off after time in hours (1-99 hour, 0 deactivates switch off)|
-
-All commands return a colon separated string with all current parameters:
-
-|Element|Stirrer|Variable in stir.ino|Description|
-|:------|:------|:-------------------|:----------|
-| 0|0|`F[0]`     |state (0=on, 1=off)|
-| 1|0|`v[0]`     |speed (rpm)|
-| 2|0|`b[0]`     |boost speed (rpm)|
-| 3|0|`rpm[0]`   |rpm|
-| 4|0|`xpm[0]`   |averaged rpm|
-| 5|0|`r[0]`     |regulation value|
-| 6|0|`bstate[0]`|boost state (0=on, 1=off)|
-| 7|0|`btime[0]` |boost time (min)|
-| 8|0|`cat[0]`   |fish catch mode state (0=on, 1=off)|
-| 9|0|`ctime[0]` |fish catch time interval (min)|
-|10|0|`rtime[0]` |speed rise time (sec)|
-|11|0|`otime[0]` |switch off time (hour)|
-|12|0|`rnval[0]` |random value range (rpm)|
-|13|0|`rnd[0]`   |current random value (rpm)|
-|14|0|           |boost remain (sec)|
-|15|0|           |off timer remain (sec)|
-|16|1|`F[1]`     |state (0=on, 1=off)|
-|17|1|`v[1]`     |speed (rpm)|
-|18|1|`b[1]`     |boost speed (rpm)|
-|19|1|`rpm[1]`   |rpm|
-|20|1|`xpm[1]`   |averaged rpm|
-|21|1|`r[1]`     |regulation value|
-|22|1|`bstate[1]`|boost state (0=on, 1=off)|
-|23|1|`btime[1]` |boost time (min)|
-|24|1|`cat[1]`   |fish catch mode state (0=on, 1=off)|
-|25|1|`ctime[1]` |fish catch time interval (min)|
-|26|1|`rtime[1]` |speed rise time (sec)|
-|27|1|`otime[1]` |switch off time (hour)|
-|28|1|`rnval[1]` |random value range (rpm)|
-|29|1|`rnd[1]`   |current random value (rpm)|
-|30|1|           |boost remain (sec)|
-|31|1|           |off timer remain (sec)|
-|32| |           |software version|
-|33| |           |uptime (ms)|
-|34| |           |0=ok, 1=error|
-
-## Schematics
-
-<p align="center">
-<img src="https://github.com/micworg/stir/blob/master/images/schematic_leonardo.png" width=500>
-<img src="https://github.com/micworg/stir/blob/master/images/schematic_uno.png" width=500>
-</p>

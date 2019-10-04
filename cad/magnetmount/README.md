@@ -1,7 +1,7 @@
 # CAD Files
 
-CAD files for 3D printed magnet holder. Compatible for magnets with size 20x10x5 mm and 
-*be quiet! Silent Wings 3 140 mm* fans.
+CAD files for 3D printed magnet moun. Compatible for magnets with size 20x10x5 mm and 
+*be quiet! Silent Wings 3 120/140 mm* fans.
 
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/images/magnetmount.jpg" width=500>
