@@ -4,11 +4,11 @@
 
 This is the Arduino project to build a double magnetic stirrer based on 2 fans, a 1602 LCD display, a KY-040 encoder and an Arduino Nano and a special PCB designed in the Hobbybrauer-Forum.
 
-V2 supports dual voltage for the fans which increases the speed range.
-
 <p align="center">
 <img src="https://github.com/micworg/stir/blob/master/images/stir+pcb.jpg" width=700>
 </p>
+
+V2 supports dual voltage for the fans which increases the speed range.
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup (see below).
 
@@ -29,7 +29,7 @@ The stir V2 software is compatible with V1 hardware if you have used neither the
 * 1x Built-in socket for plug-in power supply unit
 * 1x I2C 16x2 Arduino LCD Display Module
 * 1x Rotary encoder KY-040 
-* 2x Magnmet mount (3D printed)
+* 2x Magnet mount (3D printed)
 * 4x Neodymium magnet 20x10 mm (N52, 1 oder 2 mm dick)
 
 In addition, a housing is required that can be individually designed according to possibilities and capabilities.
