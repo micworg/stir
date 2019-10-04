@@ -49,8 +49,6 @@ Special thanks for development and testing:
 * Jens Warkentin
 * Bastian Werner
 
-Successor project of: https://github.com/micworg/stir
-
 ## Overview of Functions
 
 All functions are controlled by the KY-040 encoder:
