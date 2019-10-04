@@ -12,6 +12,7 @@ V2 supports dual voltage for the fans which increases the speed range.
 
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup (see below).
 
+The stir V2 software is compatible with V1 hardware if you have used neither the RS232 Api nor the OFF0/1.
 
 ## Part List
 
