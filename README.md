@@ -19,13 +19,13 @@ The stir V2 software is compatible with V1 hardware if you have used neither the
 * 1x PCB "Stir V2.0"
 * 1x Arduino Nano V3
 * 1x Voltage regulator TE818 5-24V to 5V 3A step down buck converter
-* 2x Relais Omron G5Q-1-EU 5DC printrelais 5 V/DC 5A 
+* 2x Relais Omron G5Q-1-EU 5DC switching printrelais 5 V/DC 5A 
 * 2x Diode 1N4148 Diotec
 * 1x Electrolytic capacitor 1000µF/16V Yageo SE016M1000B5S-1015
 * 2x Diode 1N5822 STMicroelectronics Schottky-Diode
 * 4x Metal film resistor 10 KOhm 0,6 W
-* 2x Fan BeQuiet SilentWings 3 120mm PWM Highspeed 
-* 1x Power supply 12V-20V DC / 2A
+* 2x Fan BeQuiet SilentWings 3 120mm PWM Highspeed or Noctua NF-R8 Redux-1800 80mm PWM
+* 1x Power supply 12V-16V DC / 2A
 * 1x Built-in socket for plug-in power supply unit
 * 1x I2C 16x2 Arduino LCD Display Module
 * 1x Rotary encoder KY-040 
