@@ -35,7 +35,7 @@ The stir V2 software is compatible with V1 hardware if you have used neither the
 In addition, a housing is required that can be individually designed according to possibilities and capabilities.
 
 <p align="center">
-<img src="https://github.com/micworg/stir/blob/master/images/v2_board.jpg" width=500>
+<img src="https://github.com/micworg/stir/blob/master/images/v2_board.jpg" width=350>
 </p>
 
 ## Reference
