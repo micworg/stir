@@ -93,7 +93,6 @@ All functions are controlled by the KY-040 encoder:
 |`RINC`|rise time increment (sec)|
 |`OINC`|off timer increment (hour)|
 |`RNDINC`|randon value increment (rpm)|
-
 |`CATCHSTOP`|stop interval for stir fish catch function (ms)|
 |`PWM0`, `PWM1`|PWM output pins for fan speed|
 |`PWM2`|PWM output pin for LCD brightness control|
