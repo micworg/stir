@@ -7,9 +7,17 @@
 #define SX Serial.print 
 #define SXN Serial.println
 
-String VERSION    = "2.0.1";
+String VERSION    = "2.0.2";
 
-int SPEEDINC      = 50;                                                                // speed increment (rpm)
+
+int SPEEDINC1     = 20;                                                               // speed increment values
+int SPEEDINC2     = 50;
+int SPEEDINC3     = 100;
+
+int SPEEDSTEP1    = 400;                           // speed increment steps (increment changes at these values)
+int SPEEDSTEP2    = 1000;
+
+int RNDINC        = 50;                                                         // random value increment (rpm)
 
 int FANMIN        = 200;            // fan minimum speed (should be a value at which the fan runs safely) (rpm)
 int FANMAX        = 2500;              // fan maximum speed (should be the real maximum value of the fan) (rpm)
@@ -29,8 +37,10 @@ int PWM2          = 11;                                                         
   
 int I0            = 0;            // interrupt for fan 0 rpm signal (use 2 for Leonardo/ProMicro and 0 for Uno)
 int I1            = 1;            // interrupt for fan 1 rpm signal (use 3 for Leonardo/ProMicro and 1 for Uno)
+
+int SWAPENC       = 1;                                                // switch KY-040 encoder direxction (0/1) 
                                   
-int CLK           = 5;                                                                 // clk on KY-040 encoder
+int CLK           = 5;                           // clk on KY-040 encoder (swap clk and dt to invert direction)
 int DT            = 6;                                                                  // dt on KY-040 encoder
 int SW            = 4;                                                                  // sw on KY-040 encoder
 
@@ -71,6 +81,9 @@ char form[8],out[20];                                                           
 
 void setup() { ////////////////////////////////////////////////////////////////////////////////////////// SETUP  
   Serial.begin(9600);                                                                           // start serial
+
+
+  if (SWAPENC) {;int tmp=DT;DT=CLK;CLK=tmp;}
 
   lcd.init();lcd.clear();lcd.backlight();                                                     // initialize lcd
   lcd.createChar(0,aright);lcd.createChar(1,aup);lcd.createChar(2,arnd);                 // load lcd characters
@@ -198,32 +211,32 @@ void loop() { //////////////////////////////////////////////////////////////////
   encval = digitalRead(CLK); ////////////////////////////////////////////////////////////////// process encoder
   if (encval != enclast && !LOCK) {
     if(!encval){
-            
+
       if (digitalRead(DT) != encval) {                                                // turn encoder clockwise
-        if (M==2) S++;                  // scroll menu
+        if (M==2) S++;                      // scroll menu
         else {
-          if (S==0) v[M]+=SPEEDINC;     // fan speed up
-          if (S==1) b[M]+=SPEEDINC;     // boost speed up
-          if (S==2) btime[M]+=BINC;     // boost time up
-          if (S==3) cat[M]++;           // cat on/off
-          if (S==4) ctime[M]+=CINC;     // cat time up
-          if (S==5) rtime[M]+=RINC;     // rise time up
-          if (S==6) otime[M]+=OINC;     // off time up
-          if (S==7) rnval[M]+=SPEEDINC; // random value
-          if (S==8) brght++;            // increase LCD brightness
+          if (S==0) v[M]=speedinc(v[M],1);  // fan speed up
+          if (S==1) b[M]=speedinc(b[M],1);  // boost speed up
+          if (S==2) btime[M]+=BINC;         // boost time up
+          if (S==3) cat[M]++;               // cat on/off
+          if (S==4) ctime[M]+=CINC;         // cat time up
+          if (S==5) rtime[M]+=RINC;         // rise time up
+          if (S==6) otime[M]+=OINC;         // off time up
+          if (S==7) rnval[M]+=RNDINC;       // random value
+          if (S==8) brght++;                // increase LCD brightness
         }
       } else {                                                                 // turn encoder counterclockwise
-        if (M==2) S--;                  // scroll menu
+        if (M==2) S--;                      // scroll menu
         else {
-          if (S==0) v[M]-=SPEEDINC;     // fan speed down
-          if (S==1) b[M]-=SPEEDINC;     // boost speed down
-          if (S==2) btime[M]-=BINC;     // boost time down
-          if (S==3) cat[M]--;           // cat on/off
-          if (S==4) ctime[M]-=CINC;     // cat time down
-          if (S==5) rtime[M]-=RINC;     // rise time down
-          if (S==6) otime[M]-=OINC;     // off time down
-          if (S==7) rnval[M]-=SPEEDINC; // random value
-          if (S==8) brght--;            // decrease LCD brightness
+          if (S==0) v[M]=speedinc(v[M],0);  // fan speed down
+          if (S==1) b[M]=speedinc(b[M],0);  // boost speed down
+          if (S==2) btime[M]-=BINC;         // boost time down
+          if (S==3) cat[M]--;               // cat on/off
+          if (S==4) ctime[M]-=CINC;         // cat time down
+          if (S==5) rtime[M]-=RINC;         // rise time down
+          if (S==6) otime[M]-=OINC;         // off time down
+          if (S==7) rnval[M]-=RNDINC;       // random value
+          if (S==8) brght--;                // decrease LCD brightness
         }
       }
       
@@ -250,6 +263,20 @@ void loop() { //////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////// SUPPORT
+
+int speedinc(int s,int mode) { ////////////////////////////////////////////////////// calculate speed increment
+  if (mode==0) {
+    if (s<=SPEEDSTEP1) return s-SPEEDINC1;
+    if (s<=SPEEDSTEP2) return s-SPEEDINC2;
+    return s-SPEEDINC3;
+  }
+  if (mode==1) {
+    if (s<SPEEDSTEP1) return s+SPEEDINC1;
+    if (s<SPEEDSTEP2) return s+SPEEDINC2;
+    return s+SPEEDINC3;
+  }
+  return s;
+}
 
 void lset() { ////////////////////////////////////////////////////////////////////////////// set LCD brightness
   brght=cut(brght,0,9);
