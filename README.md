@@ -73,8 +73,9 @@ All functions are controlled by the KY-040 encoder:
   * **CFG**: Configuration menu 
 
 Functions in the congirutation menu
-* **Short Press:** switch between config option and and config value.
-* **Long press:**: exit configuration menu.
+* **Short Press**: switch between config option and and config value.
+* **Long press**: exit configuration menu.
+* **Turn**: select configuration option or change value.
 
 
 
