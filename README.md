@@ -84,27 +84,27 @@ All functions are controlled by the KY-040 encoder:
 |Value|Config Menu Name|Description|
 |:----|:---------------|:----------|
 |`SPEEDINC1`, `SPEEDINC2`, `SPEEDINC3`|`SPI1`, `SPI2`, `SPI3`|increment of speed values when turning the encoder|
-|`SPEEDSTEP1`, `SPEEDSTEP2`||speed increment steps (increment changes at these values)|
-|`FANMIN`||fan minimum speed (should be a value at which the fan runs safely) (rpm)|
-|`FANMAX`||maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
-|`BOFF`||if set boost off will also turn the normal mode off|
-|`BINC`||boost time increment (min)|
-|`CINC`||catch time increment (min)|
-|`RINC`||rise time increment (sec)|
-|`OINC`||off timer increment (hour)|
-|`RNDINC`||randon value increment (rpm)|
-|`CATCHSTOP`||stop interval for stir fish catch function (ms)|
+|`SPEEDSTEP1`, `SPEEDSTEP2`|`SPS1`, `SPS2`|speed increment steps (increment changes at these values)|
+|`FANMIN`|`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
+|`FANMAX`|`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
+|`BOFF`|`BOFF`|if set boost off will also turn the normal mode off|
+|`BINC`|`BINC`|boost time increment (min)|
+|`CINC`|`CINC`|catch time increment (min)|
+|`RINC`|`RINC`|rise time increment (sec)|
+|`OINC`|`OINC`|off timer increment (hour)|
+|`RNDINC`|`RINC`|randon value increment (rpm)|
+|`CATCHSTOP`|`CSTP`|stop interval for stir fish catch function (ms)|
 |`PWM0`, `PWM1`||PWM output pins for fan speed|
 |`PWM2`||PWM output pin for LCD brightness control|
 |`I0`, `I1`||interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
-|`SWAPENC`||switch KY-040 encoder direxction (0/1)| 
+|`SWAPENC`|`SWEN`|switch KY-040 encoder direxction (0/1)| 
 |`CLK`, `DT`, `SW`||pins for KY-040 encoder| 
 |`R0`, `R0`||voltage select relais pin| 
-|`RTHRES`||voltage switch threshold (rpm)| 
+|`RTHRES`|`RTHR`|voltage switch threshold (rpm)| 
 |`RINTERVAL`||regulation interval (ms)|
 |`RDELAY`||extra regulation delay when value changes (ms)|
 |`RTOL`||regulation tolerance (rpm)|
-|`RNDINTERVL`||randon value range change interval (ms)|
+|`RNDINTERVL`|`RINT`|randon value range change interval (ms)|
 |`SINTERVAL`||speed measurement interval (ms)|
 |`SAVERAGE`||speed measurement average|
 |`SAVETAG`||parameter save identifier|
