@@ -84,7 +84,7 @@ All functions are controlled by the KY-040 encoder:
 |Value|Config Menu Name|Description|
 |:----|:---------------|:----------|
 |`SPEEDINC1`, `SPEEDINC2`, `SPEEDINC3`|`SPI1`, `SPI2`, `SPI3`|increment of speed values when turning the encoder|
-|`SPEEDSTEP1`, `SPEEDSTEP2`|speed increment steps (increment changes at these values)|
+|`SPEEDSTEP1`, `SPEEDSTEP2`||speed increment steps (increment changes at these values)|
 |`FANMIN`||fan minimum speed (should be a value at which the fan runs safely) (rpm)|
 |`FANMAX`||maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
 |`BOFF`||if set boost off will also turn the normal mode off|
