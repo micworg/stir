@@ -82,7 +82,7 @@ All functions are controlled by the KY-040 encoder:
 ## Settings (in stir.ino)
 
 |Value|Config Menu Name|Description|
-|:----|:----------|
+|:----|:---------------|:----------|
 |`SPEEDINC1`, `SPEEDINC2`, `SPEEDINC3`|`SPI1`, `SPI2`, `SPI3`|increment of speed values when turning the encoder|
 |`SPEEDSTEP1`, `SPEEDSTEP2`|speed increment steps (increment changes at these values)|
 |`FANMIN`||fan minimum speed (should be a value at which the fan runs safely) (rpm)|
