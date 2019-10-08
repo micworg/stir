@@ -78,7 +78,7 @@ int ostate[2]={0},otime[2]={0};                                                 
 int rnd[2]={0},rnval[2]={0};long seed;                                                          // random speed
 char form[8],out[20];                                                                          // string buffer
 String CF[NP];int *P[NP],Cinc[NP],Cmin[NP],Cmax[NP];                                      // configuration menu
-int clkorg,dtorg;
+int clkorg,dtorg;                                                                          // encoder direction
 
 void setup() { ////////////////////////////////////////////////////////////////////////////////////////// SETUP  
   int i;
@@ -144,7 +144,7 @@ void setup() { /////////////////////////////////////////////////////////////////
   slcd(0,0,5,VERSION);                                                                          // show version
   
   if (FANINIT) {                                                                                  // setup fans
-    digitalWrite(R0,LOW);digitalWrite(R1,LOW);delay(4000);digitalWrite(R0,HIGH);digitalWrite(R1,HIGH);
+    digitalWrite(R0,LOW);digitalWrite(R1,LOW);delay(3000);digitalWrite(R0,HIGH);digitalWrite(R1,HIGH);
   }
 }
 
