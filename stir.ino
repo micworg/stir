@@ -3,9 +3,9 @@
 #include <LiquidCrystal_I2C.h>
 
 #define MS (long)millis()
-#define NP 19                                                                 
+#define NP 25                                                                 
 
-String VERSION    = "2.1.0";
+String VERSION    = "2.1.1";
 
 int FANINIT       = 0;                                                // initialize fan with high voltage (0/1)
 
@@ -37,7 +37,7 @@ int PWM2          = 11;                                                         
 int I0            = 0;            // interrupt for fan 0 rpm signal (use 2 for Leonardo/ProMicro and 0 for Uno)
 int I1            = 1;            // interrupt for fan 1 rpm signal (use 3 for Leonardo/ProMicro and 1 for Uno)
 
-int SWAPENC       = 1;
+int SWAPENC       = 1;                                                                // swap encoder direction
                                   
 int CLK           = 5;                           // clk on KY-040 encoder (swap clk and dt to invert direction)
 int DT            = 6;                                                                  // dt on KY-040 encoder
@@ -47,17 +47,19 @@ int R0            = 7;                                                          
 int R1            = 8;                                                               // voltage select relais 1
 int RTHRES        = 700;                                                      // voltage switch threshold (rpm)
                                       
-long RINTERVAL    = 5000;                                                          // regulation internval (ms) 
-long RDELAY       = 3000;                                                   // regulation delay on changes (ms)
+int RINTERVAL     = 50;                                                            // regulation internval (ds) 
+int RDELAY        = 30;                                                     // regulation delay on changes (ds)
 int RTOL          = 8;                                                            // regulation tolerance (rpm)
 
 int RNDINTERVAL   = 300;                                            // randon value range change interval (sec)
 
-long SINTERVAL    = 2000;                                                   // speed measurement internval (ms) 
+int SINTERVAL     = 20;                                                     // speed measurement internval (ds) 
 int SAVERAGE      = 4;                                                             // speed measurement average 
 
-int SAVETAG       = 2015;                                                                           // save tag 
+int SAVETAG       = 2017;                                                                           // save tag 
 long SAVEDELAY    = 10000;                                                            // EEPROM save delay (ms)
+
+int RESET         = 0;                  // factory reset, DON'T CHANGE THIS HERE (used from configuration menu)
 
 int LGHT          = 5;                                                                        // LCD brightness 
 
@@ -80,28 +82,37 @@ char form[8],out[20];                                                           
 String CF[NP];int *P[NP],Cinc[NP],Cmin[NP],Cmax[NP];                                      // configuration menu
 int clkorg,dtorg;                                                                          // encoder direction
 
+void(* resetFunc) (void) = 0;
+
 void setup() { ////////////////////////////////////////////////////////////////////////////////////////// SETUP  
-  int i;
+  
+  int i=0;
                 
-  i=0;  P[i]=&LGHT;        CF[i]="LGHT";  defcon(i,  1,   0,    9 );                // configuration menu setup
-  i=1;  P[i]=&SPEEDINC1;   CF[i]="SPI1";  defcon(i, 10,  10,  500 );
-  i=2;  P[i]=&SPEEDINC2;   CF[i]="SPI2";  defcon(i, 10,  10,  500 );
-  i=3;  P[i]=&SPEEDINC3;   CF[i]="SPI3";  defcon(i, 10,  10,  500 );
-  i=4;  P[i]=&SPEEDSTEP1;  CF[i]="SPS1";  defcon(i, 50, 100, 2000 );
-  i=5;  P[i]=&SPEEDSTEP2;  CF[i]="SPS2";  defcon(i, 50, 100, 2000 );
-  i=6;  P[i]=&SWAPENC;     CF[i]="SWEN";  defcon(i,  1,   0,    1 );
-  i=7;  P[i]=&RNDINC;      CF[i]="RINC";  defcon(i,  1,   0,    9 );
-  i=8;  P[i]=&CATCHSTOP;   CF[i]="CSTP";  defcon(i, 10,   0, 1000 );
-  i=9;  P[i]=&FANMIN;      CF[i]="FMIN";  defcon(i, 50, 100, 1000 );
-  i=10; P[i]=&FANMAX;      CF[i]="FMAX";  defcon(i, 50, 500, 4000 );
-  i=11; P[i]=&FANINIT;     CF[i]="FINI";  defcon(i,  1,   0,    1 );
-  i=12; P[i]=&RTHRES;      CF[i]="RTHR";  defcon(i, 50,   0, 1500 );
-  i=13; P[i]=&RNDINTERVAL; CF[i]="RINT";  defcon(i,  1,   0,   60 );
-  i=14; P[i]=&BOFF;        CF[i]="BOFF";  defcon(i,  1,   0,    1 );
-  i=15; P[i]=&BINC;        CF[i]="BINC";  defcon(i,  1,   1,   60 );
-  i=16; P[i]=&CINC;        CF[i]="CINC";  defcon(i,  1,   1,   60 );
-  i=17; P[i]=&RINC;        CF[i]="RINC";  defcon(i,  1,   1,   60 );
-  i=18; P[i]=&OINC;        CF[i]="OINC";  defcon(i,  1,   1,   60 );
+  P[i]=&LGHT;        CF[i]=F("LGHT");  defcon(i,  1,   0,    9 ); i++; 
+  P[i]=&SPEEDINC1;   CF[i]=F("SPI1");  defcon(i, 10,  10,  500 ); i++;
+  P[i]=&SPEEDINC2;   CF[i]=F("SPI2");  defcon(i, 10,  10,  500 ); i++;
+  P[i]=&SPEEDINC3;   CF[i]=F("SPI3");  defcon(i, 10,  10,  500 ); i++;
+  P[i]=&SPEEDSTEP1;  CF[i]=F("SPS1");  defcon(i, 50, 100, 2000 ); i++;
+  P[i]=&SPEEDSTEP2;  CF[i]=F("SPS2");  defcon(i, 50, 100, 2000 ); i++;
+  P[i]=&SWAPENC;     CF[i]=F("SWEN");  defcon(i,  1,   0,    1 ); i++;
+  P[i]=&RNDINC;      CF[i]=F("RINC");  defcon(i,  1,   0,    9 ); i++;
+  P[i]=&CATCHSTOP;   CF[i]=F("CSTP");  defcon(i, 10,   0, 1000 ); i++;
+  P[i]=&FANMIN;      CF[i]=F("FMIN");  defcon(i, 50, 100, 1000 ); i++;
+  P[i]=&FANMAX;      CF[i]=F("FMAX");  defcon(i, 50, 500, 4000 ); i++;
+  P[i]=&FANINIT;     CF[i]=F("FINI");  defcon(i,  1,   0,    1 ); i++;
+  P[i]=&RTHRES;      CF[i]=F("RTHR");  defcon(i, 50,   0, 1500 ); i++;
+  P[i]=&RNDINTERVAL; CF[i]=F("RINT");  defcon(i,  1,   0,   60 ); i++;
+  P[i]=&BOFF;        CF[i]=F("BOFF");  defcon(i,  1,   0,    1 ); i++;
+  P[i]=&BINC;        CF[i]=F("BINC");  defcon(i,  1,   1,   60 ); i++;
+  P[i]=&CINC;        CF[i]=F("CINC");  defcon(i,  1,   1,   60 ); i++;
+  P[i]=&RINC;        CF[i]=F("RINC");  defcon(i,  1,   1,   60 ); i++;
+  P[i]=&OINC;        CF[i]=F("OINC");  defcon(i,  1,   1,   60 ); i++;
+  P[i]=&RINTERVAL;   CF[i]=F("XINT");  defcon(i,  1,  10,  250 ); i++;
+  P[i]=&RDELAY;      CF[i]=F("XDEL");  defcon(i,  1,   0,  100 ); i++;
+  P[i]=&RTOL;        CF[i]=F("XTOL");  defcon(i,  1,   1,  100 ); i++;
+  P[i]=&SINTERVAL;   CF[i]=F("SINT");  defcon(i,  1,   0,  100 ); i++;
+  P[i]=&SAVERAGE;    CF[i]=F("SAVG");  defcon(i,  1,   1,  100 ); i++;
+  P[i]=&RESET;       CF[i]=F("RSET");  defcon(i,  1,   0,    1 ); i++;
 
   lcd.init();lcd.clear();lcd.backlight();                                                     // initialize lcd
   lcd.createChar(0,aright);lcd.createChar(1,aup);lcd.createChar(2,arnd);                 // load lcd characters
@@ -130,15 +141,13 @@ void setup() { /////////////////////////////////////////////////////////////////
     for (i=0;i<NP;i++) *P[i]=eer(200+i);
   }
 
-  clkorg=CLK;dtorg=DT;
-
-  if (SWAPENC) {;DT=clkorg;CLK=dtorg;}
+  clkorg=CLK;dtorg=DT;if (SWAPENC) {;DT=clkorg;CLK=dtorg;}                            // swap encoder direction
   
   lset();
 
   enclast=digitalRead(CLK);                                                                // get encoder state
 
-  for (i=0;i<2;i++) catts[i]=stop[i]=vts[i]=ots[i]=rndts[i]=MS;xts=sts=rts=swts=buts=savets=MS;    // timer
+  for (i=0;i<2;i++) catts[i]=stop[i]=vts[i]=ots[i]=rndts[i]=MS;xts=sts=rts=swts=buts=savets=MS;        // timer
   updatePWM();updatelcd();updatespeed();updatemarker();                                           // update all
 
   slcd(0,0,5,VERSION);                                                                          // show version
@@ -175,12 +184,12 @@ void loop() { //////////////////////////////////////////////////////////////////
 
   }
 
-  if (MS-xts>SINTERVAL) { /////////////////////////////////////////////////////////////////// speed measurement    
+  if (MS-xts>(SINTERVAL*100)) { ///////////////////////////////////////////////////////////// speed measurement    
     for (int i=0;i<2;i++) xpm[i]=xpm[i]*(SAVERAGE-1)/SAVERAGE+(bc[i]/((MS-xts)/1000.0)*30.0)/SAVERAGE;
     updatespeed();xts=MS;bc[0]=0;bc[1]=0;
   }
 
-  if (MS-rts>RINTERVAL) { //////////////////////////////////////////////////////////////////// speed regulation
+  if (MS-rts>(RINTERVAL*100)) { ////////////////////////////////////////////////////////////// speed regulation
     for (int i=0;i<2;i++) {
       rpm[i]=ac[i]/((MS-sts)/1000.0)*30.0;
       ac[i]=0;
@@ -223,6 +232,7 @@ void loop() { //////////////////////////////////////////////////////////////////
           M=2;save();updatemarker(); 
           if (SWAPENC) {;DT=clkorg;CLK=dtorg;}
           else {;DT=dtorg;CLK=clkorg;}
+          if (RESET==1) {;RESET=0;eew(0,0);save();resetFunc();}
         }
       }
       
@@ -256,7 +266,8 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==6) otime[M]+=OINC;         // off time up
           if (S==7) rnval[M]+=RNDINC;       // random value
           if (S==8 && M==0) C++;            // increase config menu
-          if (S==8 && M==1) *P[C] = cut(*P[C] + Cinc[C],Cmin[C],Cmax[C]);
+          
+          if (S==8 && M==1) *P[C]=cut(*P[C]+Cinc[C],Cmin[C],Cmax[C]);           // increase configuration value
         }
       } else {                                                                 // turn encoder counterclockwise
         if (M==2) S--;                                                                           // scroll menu
@@ -270,14 +281,15 @@ void loop() { //////////////////////////////////////////////////////////////////
           if (S==6) otime[M]-=OINC;         // off time down
           if (S==7) rnval[M]-=RNDINC;       // random value
           if (S==8 && M==0) C--;            // decrease config menu
-          if (S==8 && M==1) *P[C] = cut(*P[C] - Cinc[C],Cmin[C],Cmax[C]);
+          
+          if (S==8 && M==1) *P[C]=cut(*P[C]-Cinc[C],Cmin[C],Cmax[C]);           // decrease configuration value
         }
       }
       
       for (int i=0;i<2;i++) if (b[i]<v[i]) b[i]=v[i];
 
       if (M!=2) {
-        if (S<=1) {;updatePWM();rts=MS+RDELAY;}                                   // apply (boost) speed change
+        if (S<=1) {;updatePWM();rts=MS+(RDELAY*100);}                             // apply (boost) speed change
         if (S==2) btime[M]=cut(btime[M],0,99);                                              // check boost time
         if (S==3) {;cat[M]=cut(cat[M],0,1);catts[M]=MS;}                                           // check cat
         if (S==4) ctime[M]=cut(ctime[M],60,240);                                              // check cat time
@@ -287,7 +299,7 @@ void loop() { //////////////////////////////////////////////////////////////////
         if (S==8 && C==0) lset();                                                         // set LCD brightness
       }
       
-      C=cut(C,0,18);                                                                          // check cfg mode
+      C=cut(C,0,NP-1);                                                              // check configuration mode
 
       if (M==2) S=cut(S,0,8);                                                                // check menu mode
       
@@ -330,7 +342,7 @@ void oset(int n,int t) { ///////////////////////////////////////////////////////
 
 void fset(int n,int s) { /////////////////////////////////////////////////////////////// set fan state (on/off)
   if (s==1) {
-    rts=MS+RDELAY;F[n]=1;catts[n]=vts[n]=MS;r[n]=0;
+    rts=MS+(RDELAY*100);F[n]=1;catts[n]=vts[n]=MS;r[n]=0;
   } else {
     F[n]=0;bstate[n]=0;
   }
@@ -340,9 +352,9 @@ void fset(int n,int s) { ///////////////////////////////////////////////////////
 
 void bset(int n,int s) { ///////////////////////////////////////////////////////////// set boost state (on/off)
   if (s==1) {
-    rts=MS+RDELAY;bstate[n]=1;bts[n]=MS;F[n]=1;vts[n]=MS; 
+    rts=MS+(RDELAY*100);bstate[n]=1;bts[n]=MS;F[n]=1;vts[n]=MS; 
   } else {
-    bstate[n]=0;rts=MS+RDELAY;  
+    bstate[n]=0;rts=MS+(RDELAY*100);  
   }
   updatePWM();
   SAVE++;
@@ -351,31 +363,31 @@ void bset(int n,int s) { ///////////////////////////////////////////////////////
 void updatelcd() { ///////////////////////////////////////////////////////////////////////////////// update LCD
   
   for (int i=0;i<2;i++) {
-    if (S==0) {;slcd(1,1,5,"SPEED");ilcd(7+i*5,1,-4,v[i]);}
-    if (S==1) {;slcd(1,1,5,"BOOST");ilcd(7+i*5,1,-4,int(b[i]));}
-    if (S==2) {;slcd(1,1,5,"BTIME");ilcd(7+i*5,1,-4,int(btime[i]));}
+    if (S==0) {;slcd(1,1,5,F("SPEED"));ilcd(7+i*5,1,-4,v[i]);}
+    if (S==1) {;slcd(1,1,5,F("BOOST"));ilcd(7+i*5,1,-4,int(b[i]));}
+    if (S==2) {;slcd(1,1,5,F("BTIME"));ilcd(7+i*5,1,-4,int(btime[i]));}
     if (S==3) {
-      slcd(1,1,5,"CATCH");
-      if (cat[i]==0) slcd( 7+i*5,1,-4,"OFF"); else slcd( 7+i*5,1,-3,"ON");
+      slcd(1,1,5,F("CATCH"));
+      if (cat[i]==0) slcd( 7+i*5,1,-4,F("OFF")); else slcd( 7+i*5,1,-3,F("ON"));
     }
-    if (S==4) {;slcd(1,1,5,"CTIME");ilcd(7+i*5,1,-4,int(ctime[i]));}
-    if (S==5) {;slcd(1,1,5,"RTIME");ilcd(7+i*5,1,-4,int(rtime[i]));}
-    if (S==6) {;slcd(1,1,5,"OTIME");ilcd(7+i*5,1,-4,int(otime[i]));}
-    if (S==7) {;slcd(1,1,5,"RNVAL");ilcd(7+i*5,1,-4,int(rnval[i]));}
+    if (S==4) {;slcd(1,1,5,F("CTIME"));ilcd(7+i*5,1,-4,int(ctime[i]));}
+    if (S==5) {;slcd(1,1,5,F("RTIME"));ilcd(7+i*5,1,-4,int(rtime[i]));}
+    if (S==6) {;slcd(1,1,5,F("OTIME"));ilcd(7+i*5,1,-4,int(otime[i]));}
+    if (S==7) {;slcd(1,1,5,F("RNVAL"));ilcd(7+i*5,1,-4,int(rnval[i]));}
   }
-  if (S==8) {;slcd(1,1,-5,"CFG");slcd(7,1,-4,CF[C]);ilcd(7+5,1,-4,*P[C]);}
+  if (S==8) {;slcd(1,1,-5,F("CFG"));slcd(7,1,-4,CF[C]);ilcd(7+5,1,-4,*P[C]);}
 }  
 
 void updatemarker() { ////////////////////////////////////////////////////////////////////// update menu marker
-  slcd(0,1,1," ");slcd(6,1,1," ");slcd(11,1,1," ");
+  slcd(0,1,1,F(" "));slcd(6,1,1,F(" "));slcd(11,1,1,F(" "));
   int m[]={6,11,0};if (!LOCK) clcd(m[M],1,0);
 }
 
 void updatespeed() { ///////////////////////////////////////////////////////////////////////// update fan speed
-  if (bclr) slcd(0,0,6,"      ");
+  if (bclr) slcd(0,0,6,F("      "));
   for (int i=0;i<2;i++) {
     slcd(6+i*5,0,1," ");
-    if (cstate[i]) slcd(7+i*5,0,-4,"CAT");
+    if (cstate[i]) slcd(7+i*5,0,-4,F("CAT"));
     else {
       if (F[i]) {
         if (bstate[i]) ilcd(1+i*3,0,-2, (((long)btime[i]*60000)-(MS-(long)bts[i]))/1000/60+1);
@@ -385,7 +397,7 @@ void updatespeed() { ///////////////////////////////////////////////////////////
         else {
           if (xv[i]>=v[i] && rnval[i]>0 && !bstate[i]) clcd(6+i*5,0,2);
         }
-      } else slcd(7+i*5,0,-4,"OFF");
+      } else slcd(7+i*5,0,-4,F("OFF"));
     }
   }
 }
