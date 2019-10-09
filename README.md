@@ -92,38 +92,37 @@ Functions in the congirutation menu
 ## Settings (in stir.ino)
 
 |Value|Config Menu Name|Description|
-|:----|:---------------|:----------|
-|`LGHT`|`LGHT`|LCD display brightness|
-|`SPEEDINC1` |`SPI1`|increment of speed values when turning the encoder (1. range)|
-|`SPEEDINC2` |`SPI2`|increment of speed values when turning the encoder (2. range)|
-|`SPEEDINC3` |`SPI3`|increment of speed values when turning the encoder (3. range)|
-|`SPEEDSTEP1`|`SPS1`|speed increment steps (increment changes at these values, separates range 1 and 2)|
-|`SPEEDSTEP2`|`SPS2`|speed increment steps (increment changes at these values, separates range 2 and 3))|
-|`FANMIN`    |`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
-|`FANMAX`    |`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan)
-                     (rpm)|
-|`FANINIT`   |`FINI`|set fan to hight voltage at boot (3 sec)|
-|`BOFF`      |`BOFF`|if set boost off will also turn the normal mode off|
-|`BINC`      |`BINC`|boost time increment (min)|
-|`CINC`      |`CINC`|catch time increment (min)|
-|`RINC`      |`RINC`|rise time increment (sec)|
-|`OINC`      |`OINC`|off timer increment (hour)|
-|`RNDINC`|`RINC`|randon value increment (rpm)|
-|`CATCHSTOP`|`CSTP`|stop interval for stir fish catch function (ms)|
-|`PWM0`, `PWM1`||PWM output pins for fan speed|
-|`PWM2`||PWM output pin for LCD brightness control|
-|`I0`, `I1`||interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
-|`SWAPENC`|`SWEN`|switch KY-040 encoder direxction (0/1)| 
-|`CLK`, `DT`, `SW`||pins for KY-040 encoder| 
-|`R0`, `R0`||voltage select relais pin| 
-|`RTHRES`|`RTHR`|voltage switch threshold (rpm)| 
-|`RINTERVAL`||regulation interval (ms)|
-|`RDELAY`||extra regulation delay when value changes (ms)|
-|`RTOL`||regulation tolerance (rpm)|
-|`RNDINTERVL`|`RINT`|randon value range change interval (ms)|
-|`SINTERVAL`||speed measurement interval (ms)|
-|`SAVERAGE`||speed measurement average|
-|`SAVETAG`||parameter save identifier|
-|`SAVEDELAY`||delay in seconds before parameter will be saved to EEPROM|
-|`LCDB`||LCD brightness steps (10 values, 0=off, 255=max)|
+|:----------------|:-----|:----------|
+|`LGHT`           |`LGHT`|LCD display brightness|
+|`SPEEDINC1`      |`SPI1`|increment of speed values when turning the encoder (1. range)|
+|`SPEEDINC2`      |`SPI2`|increment of speed values when turning the encoder (2. range)|
+|`SPEEDINC3`      |`SPI3`|increment of speed values when turning the encoder (3. range)|
+|`SPEEDSTEP1`     |`SPS1`|speed increment steps (increment changes at these values, separates range 1 and 2)|
+|`SPEEDSTEP2`     |`SPS2`|speed increment steps (increment changes at these values, separates range 2 and 3))|
+|`FANMIN`         |`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
+|`FANMAX`         |`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
+|`FANINIT`        |`FINI`|set fan to hight voltage at boot (3 sec)|
+|`BOFF`           |`BOFF`|if set boost off will also turn the normal mode off|
+|`BINC`           |`BINC`|boost time increment (min)|
+|`CINC`           |`CINC`|catch time increment (min)|
+|`RINC`           |`RINC`|rise time increment (sec)|
+|`OINC`           |`OINC`|off timer increment (hour)|
+|`RNDINC`         |`RINC`|randon value increment (rpm)|
+|`CATCHSTOP`      |`CSTP`|stop interval for stir fish catch function (ms)|
+|`PWM0`, `PWM1`   |      |PWM output pins for fan speed|
+|`PWM2`           |      |PWM output pin for LCD brightness control|
+|`I0`, `I1`       |      |interrupts for rpm measurement (2 and 3 for Leonardo and ProMicro / 0 and 1 for Uno)|
+|`SWAPENC`        |`SWEN`|switch KY-040 encoder direxction (0/1)| 
+|`CLK`, `DT`, `SW`|      |pins for KY-040 encoder| 
+|`R0`, `R0`       |      |voltage select relais pin| 
+|`RTHRES`         |`RTHR`|voltage switch threshold (rpm)| 
+|`RINTERVAL`      |      |regulation interval (ms)|
+|`RDELAY`         |      |extra regulation delay when value changes (ms)|
+|`RTOL`           |      |regulation tolerance (rpm)|
+|`RNDINTERVL`     |`RINT`|randon value range change interval (ms)|
+|`SINTERVAL`      |      |speed measurement interval (ms)|
+|`SAVERAGE`       |      |speed measurement average|
+|`SAVETAG`        |      |parameter save identifier|
+|`SAVEDELAY`      |      |delay in seconds before parameter will be saved to EEPROM|
+|`LCDB`           |      |LCD brightness steps (10 values, 0=off, 255=max)|
 
