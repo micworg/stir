@@ -91,7 +91,7 @@ Functions in the congirutation menu
 
 ## Settings (in stir.ino)
 
-|Value|Config|Description|
+|Value|Config Menu Name|Description|
 |:----------------|:-----|:----------|
 |`LGHT`           |`LGHT`|LCD display brightness|
 |`SPEEDINC1`      |`SPI1`|increment of speed values when turning the encoder (1. range)|
