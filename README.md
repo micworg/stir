@@ -116,12 +116,12 @@ Functions in the congirutation sub menu
 |`CLK`, `DT`, `SW`|      |pins for KY-040 encoder| 
 |`R0`, `R0`       |      |voltage select relais pin| 
 |`RTHRES`         |`RTHR`|voltage switch threshold (rpm)| 
-|`RINTERVAL`      |      |regulation interval (ms)|
-|`RDELAY`         |      |extra regulation delay when value changes (ms)|
-|`RTOL`           |      |regulation tolerance (rpm)|
+|`RINTERVAL`      |`XINT`|regulation interval (ms)|
+|`RDELAY`         |`XDEL`|extra regulation delay when value changes (ms)|
+|`RTOL`           |`XTOL`|regulation tolerance (rpm)|
 |`RNDINTERVL`     |`RINT`|randon value range change interval (ms)|
-|`SINTERVAL`      |      |speed measurement interval (ms)|
-|`SAVERAGE`       |      |speed measurement average|
+|`SINTERVAL`      |`SINT`|speed measurement interval (ms)|
+|`SAVERAGE`       |`SAVG`|speed measurement average|
 |`SAVETAG`        |      |parameter save identifier|
 |`SAVEDELAY`      |      |delay in seconds before parameter will be saved to EEPROM|
 |`LCDB`           |      |LCD brightness steps (10 values, 0=off, 255=max)|
