@@ -1,5 +1,6 @@
 # Dual magnetic stir controller V2
 
+
 ## Overview
 
 This is the Arduino project to build a double magnetic stirrer based on 2 fans, a 1602 LCD display, a KY-040 encoder and an Arduino Nano and a special PCB designed in the Hobbybrauer-Forum.
@@ -13,6 +14,7 @@ V2 supports dual voltage for the fans which increases the speed range.
 In order to put the stirrer into operation you have to change the settings in stir.ino according to your setup (see below).
 
 The stir V2 software is compatible with V1 hardware if you have used neither the RS232 Api nor the OFF0 and OFF1 relais pins.
+
 
 ## Part List
 
@@ -38,6 +40,7 @@ In addition, a housing is required that can be individually designed according t
 <img src="https://github.com/micworg/stir/blob/master/images/v2_board.jpg" width=350>
 </p>
 
+
 ## Reference
 
 This project was created based on an idea from the german Hobbybrauer-Forum and would not be possible without the ideas from there.
@@ -52,6 +55,7 @@ Special thanks for development and testing:
 * Adrian Sigel
 * Jens Warkentin
 * Bastian Werner
+
 
 ## Overview of Functions
 
@@ -76,10 +80,6 @@ Functions in the congirutation menu
 * **Short Press**: switch between config option and and value.
 * **Long press**: exit configuration menu.
 * **Turn**: select configuration option or change value.
-
-
-
-
 
 
 ## Display Indicators:
