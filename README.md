@@ -111,7 +111,7 @@ Functions in the congirutation sub menu
 |`CATCHSTOP`      |`CSTP`|stop interval for stir fish catch function (ms)|
 |`PWM0`, `PWM1`   |      |PWM output pins for fan speed|
 |`PWM2`           |      |PWM output pin for LCD brightness control|
-|`I0`, `I1`       |      |interrupts for rpm measurement (0/1 for Uno/Nanp, 2/3 for Leonardo/ProMicro)|
+|`I0`, `I1`       |      |interrupts for rpm measurement (0/1 for Uno/Nano, 2/3 for Leonardo/ProMicro)|
 |`SWAPENC`        |`SWEN`|switch KY-040 encoder direxction (0/1)| 
 |`CLK`, `DT`, `SW`|      |pins for KY-040 encoder| 
 |`R0`, `R0`       |      |voltage select relais pin| 
@@ -125,4 +125,5 @@ Functions in the congirutation sub menu
 |`SAVETAG`        |      |parameter save identifier|
 |`SAVEDELAY`      |      |delay in seconds before parameter will be saved to EEPROM|
 |`LCDB`           |      |LCD brightness steps (10 values, 0=off, 255=max)|
+|`RESET`          |`RSET`|change this value in configuration menu to 1 for factory reset|
 
