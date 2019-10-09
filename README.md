@@ -94,8 +94,11 @@ Functions in the congirutation menu
 |Value|Config Menu Name|Description|
 |:----|:---------------|:----------|
 |`LGHT`|`LGHT`|LCD display brightness|
-|`SPEEDINC1`, `SPEEDINC2`, `SPEEDINC3`|`SPI1`, `SPI2`, `SPI3`|increment of speed values when turning the encoder|
-|`SPEEDSTEP1`, `SPEEDSTEP2`|`SPS1`, `SPS2`|speed increment steps (increment changes at these values)|
+|`SPEEDINC1`|`SPI1`|increment of speed values when turning the encoder (1. range)|
+|`SPEEDINC2`|`SPI2`|increment of speed values when turning the encoder (2. range)|
+|`SPEEDINC3`|`SPI3`|increment of speed values when turning the encoder (3. range)|
+|`SPEEDSTEP1`|`SPS1`|speed increment steps (increment changes at these values)|
+|`SPEEDSTEP2`|`SPS2`|speed increment steps (increment changes at these values)|
 |`FANMIN`|`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
 |`FANMAX`|`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
 |`FANINIT`|`FINI`|set fan to hight voltage at boot (3 sec)|
