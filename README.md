@@ -100,7 +100,7 @@ Functions in the congirutation menu
 |`SPEEDSTEP1`     |`SPS1`|speed increment steps (increment changes at these values, separates range 1 and 2)|
 |`SPEEDSTEP2`     |`SPS2`|speed increment steps (increment changes at these values, separates range 2 and 3))|
 |`FANMIN`         |`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
-|`FANMAX`         |`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
+|`FANMAX`         |`FMAX`|fan maximum speed  (it's important that this is the real maximum value of the fan) (rpm)|
 |`FANINIT`        |`FINI`|set fan to hight voltage at boot (3 sec)|
 |`BOFF`           |`BOFF`|if set boost off will also turn the normal mode off|
 |`BINC`           |`BINC`|boost time increment (min)|
