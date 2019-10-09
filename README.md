@@ -100,13 +100,14 @@ Functions in the congirutation menu
 |`SPEEDSTEP1`|`SPS1`|speed increment steps (increment changes at these values, separates range 1 and 2)|
 |`SPEEDSTEP2`|`SPS2`|speed increment steps (increment changes at these values, separates range 2 and 3))|
 |`FANMIN`    |`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
-|`FANMAX`    |`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan) (rpm)|
+|`FANMAX`    |`FMAX`|maximum speed of the fan (it is important that this is the real maximum value of the fan)
+                     (rpm)|
 |`FANINIT`   |`FINI`|set fan to hight voltage at boot (3 sec)|
-|`BOFF`|`BOFF`|if set boost off will also turn the normal mode off|
-|`BINC`|`BINC`|boost time increment (min)|
-|`CINC`|`CINC`|catch time increment (min)|
-|`RINC`|`RINC`|rise time increment (sec)|
-|`OINC`|`OINC`|off timer increment (hour)|
+|`BOFF`      |`BOFF`|if set boost off will also turn the normal mode off|
+|`BINC`      |`BINC`|boost time increment (min)|
+|`CINC`      |`CINC`|catch time increment (min)|
+|`RINC`      |`RINC`|rise time increment (sec)|
+|`OINC`      |`OINC`|off timer increment (hour)|
 |`RNDINC`|`RINC`|randon value increment (rpm)|
 |`CATCHSTOP`|`CSTP`|stop interval for stir fish catch function (ms)|
 |`PWM0`, `PWM1`||PWM output pins for fan speed|
