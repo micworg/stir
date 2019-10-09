@@ -76,7 +76,7 @@ All functions are controlled by the KY-040 encoder:
 * **Other menu options**:
   * **CFG**: Configuration menu 
 
-Functions in the congirutation menu
+Functions in the congirutation sub menu
 * **Short Press**: switch between config option and and value.
 * **Long press**: exit configuration menu.
 * **Turn**: select configuration option or change value.
@@ -101,7 +101,7 @@ Functions in the congirutation menu
 |`SPEEDSTEP2`     |`SPS2`|speed increment steps (increment changes at these values, separates range 2 and 3))|
 |`FANMIN`         |`FMIN`|fan minimum speed (should be a value at which the fan runs safely) (rpm)|
 |`FANMAX`         |`FMAX`|fan maximum speed  (it's important that this is the real maximum value of the fan) (rpm)|
-|`FANINIT`        |`FINI`|set fan to high voltage for 3 sec at boot (0/1)|
+|`FANINIT`        |`FINI`|set fans to high voltage for 3 sec at boot (0/1)|
 |`BOFF`           |`BOFF`|if set boost off will also turn the normal mode off (0/1)|
 |`BINC`           |`BINC`|boost time increment (min)|
 |`CINC`           |`CINC`|catch time increment (min)|
