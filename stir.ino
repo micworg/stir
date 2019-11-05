@@ -5,7 +5,7 @@
 #define MS (long)millis()
 #define NP 25                                                                 
 
-String VERSION    = "2.1.1";
+String VERSION    = "2.1.2";
 
 int FANINIT       = 0;                                                // initialize fan with high voltage (0/1)
 
@@ -436,10 +436,10 @@ void updatePWM() { /////////////////////////////////////////////////////////////
     if (!F[i]) setPWM(i,0); else setPWM(i,cut((bstate[i]?xb[i]:xv[i])/(FANMAX/320.0)+r[i],1,320));
   }
   
-  if (v[0]>=RTHRES) digitalWrite(R0,LOW);
+  if ((bstate[0]?b[0]:v[0])>=RTHRES) digitalWrite(R0,LOW);
   else digitalWrite(R0,HIGH);
   
-  if (v[1]>=RTHRES) digitalWrite(R1,LOW);
+  if ((bstate[1]?b[1]:v[1])>=RTHRES) digitalWrite(R1,LOW);
   else digitalWrite(R1,HIGH);
 } 
 
