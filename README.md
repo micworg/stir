@@ -20,17 +20,17 @@ The stir V2 software is compatible with V1 hardware if you have used neither the
 
 * 1x PCB "Stir V2.0"
 * 1x Arduino Nano V3
-* 1x Voltage regulator TE818 5-24V to 5V 3A step down buck converter
-* 2x Relais Omron G5Q-1-EU 5DC switching printrelais 5 V/DC 5A 
-* 2x Diode 1N4148 Diotec
-* 1x Electrolytic capacitor 1000µF/16V Yageo SE016M1000B5S-1015
-* 2x Diode 1N5822 STMicroelectronics Schottky-Diode
-* 4x Metal film resistor 10 KOhm 0,6 W
+* 1x [Voltage regulator TE818 5-24V to 5V 3A step down buck converter](https://www.ebay.de/itm/5x-Voltage-Regulator-5-24V-to-5V-3A-Step-Down-Buck-Converter-Power-Module-TE818/133109140535?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2057872.m2749.l2649)
+* 2x [Relais Omron G5Q-1-EU 5DC switching printrelais 5 V/DC 5A](https://www.conrad.de/de/p/omron-g5q-1-eu-5dc-printrelais-5-v-dc-5-a-1-wechsler-1-st-503930.html)
+* 2x [Diode 1N4148 Diotec](https://www.conrad.de/de/p/stmicroelectronics-schottky-diode-gleichrichter-1n5822-do-201ad-40-v-einzeln-168275.html)
+* 1x [Electrolytic capacitor 1000µF/16V Yageo SE016M1000B5S-1015](https://www.conrad.de/de/p/yageo-se016m1000b5s-1015-elektrolyt-kondensator-radial-bedrahtet-5-mm-1000-f-16-v-20-x-h-10-mm-x-15-mm-1-st-445386.html)
+* 2x [Diode 1N5822 STMicroelectronics Schottky-Diode](https://www.conrad.de/de/p/diotec-ultraschnelle-si-diode-1n4148-sod-27-75-v-150-ma-162280.html)
+* 4x [Metal film resistor 10 KOhm 0,6 W](https://www.conrad.de/de/p/rs-pro-metallschichtwiderstand-10k-0-5-0-6w-807200469.html)
 * 2x Fan BeQuiet SilentWings 3 120mm PWM Highspeed or Noctua NF-R8 Redux-1800 80mm PWM
 * 1x Power supply 12V-16V DC / 2A
 * 1x Built-in socket for plug-in power supply unit
 * 1x I2C 16x2 Arduino LCD Display Module
-* 1x Rotary encoder KY-040 
+* 1x [Rotary encoder KY-040](https://www.conrad.de/de/p/joy-it-kodierter-drehschalter-rotary-encoder-1695709.html)
 * 2x Magnet mount (3D printed)
 * 4x Neodymium magnet 20x10 mm (N52, 1 oder 2 mm dick)
 
